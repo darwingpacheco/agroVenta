@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Colores personalizados -->
+    <color name="colorPrimary">#FF5722</color> <!-- Naranja -->
+    <color name="colorPrimaryVariant">#E64A19</color> <!-- Variante de naranja más oscuro -->
+    <color name="colorOnPrimary">#FFFFFF</color> <!-- Color del texto cuando se usa colorPrimary -->
+
+    <color name="colorSecondary">#4CAF50</color> <!-- Verde -->
+    <color name="colorSecondaryVariant">#388E3C</color> <!-- Variante de verde más oscuro -->
+    <color name="colorOnSecondary">#FFFFFF</color> <!-- Color del texto cuando se usa colorSecondary -->
+</resources>
