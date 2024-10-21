@@ -28,9 +28,9 @@ public class Menu extends AppCompatActivity {
         recyclerView.setLayoutManager(gridLayoutManager);
 
         productList = new ArrayList<>();
-        productList.add(new Product("Cebolla Roja", "Se venden 10 cargas de cebolla roja de muy buena calidad", R.drawable.account_manager, "Abrego", 200.000, "3224291874", "Darwin Gómez"));
-        productList.add(new Product("Cebolla Roja", "Se venden 32 cargas de cebolla roja ", R.drawable.account_manager, "Ocaña", 210.000, "3158746328", "Juan Martinez"));
-        productList.add(new Product("Cebolla Roja", "Se venden 12 cargas de cebolla roja puesta en la Plata de Belen", R.drawable.account_manager, "La Playa", 190.000, "3048751462", "Santiago"));
+        productList.add(new Product("Cebolla Roja", "Se venden 10 cargas de cebolla roja de muy buena calidad", R.drawable.cebolla, "Abrego", 200.000, "3224291874", "Darwin Gómez"));
+        productList.add(new Product("Cebolla Roja", "Se venden 32 cargas de cebolla roja ", R.drawable.cebolla, "Ocaña", 210.000, "3158746328", "Juan Martinez"));
+        productList.add(new Product("Cebolla Roja", "Se venden 12 cargas de cebolla roja puesta en la Plata de Belen", R.drawable.cebolla, "La Playa", 190.000, "3048751462", "Santiago"));
 
         productAdapter = new ProductAdapter(this, productList);
         recyclerView.setAdapter(productAdapter);
