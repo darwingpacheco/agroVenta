@@ -8,8 +8,9 @@ public class Product {
     private String phoneContact;
     private String nameSeller;
     private double price;
+    private String tipo;
 
-    public Product(String title, String description, int imageResourceId, String ubication, double price, String phoneContact, String nameSeller) {
+    public Product(String title, String description, int imageResourceId, String ubication, double price, String phoneContact, String nameSeller, String tipo) {
         this.title = title;
         this.description = description;
         this.imageResourceId = imageResourceId;
@@ -17,6 +18,7 @@ public class Product {
         this.price = price;
         this.phoneContact = phoneContact;
         this.nameSeller = nameSeller;
+        this.tipo = tipo;
     }
 
     public String getTitle() {
@@ -61,5 +63,13 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 }
