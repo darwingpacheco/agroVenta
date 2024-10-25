@@ -13,17 +13,21 @@
         android:windowSoftInputMode="stateHidden|adjustPan"
         tools:targetApi="31">
         <activity
-            android:name=".ProductDetailActivity"
-            android:theme="@style/Theme.AgroVentaDos"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
+            android:name=".sellProducto"
             android:theme="@style/Theme.AgroVentaTres"
             android:exported="false" />
         <activity
+            android:name=".ProductDetailActivity"
+            android:theme="@style/Theme.AgroVentaDos"
+            android:exported="false"/>
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.AgroVentaTres"
+            android:exported="false"/>
+        <activity
             android:name=".Menu"
-            android:theme="@style/Theme.AgroVenta"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.AgroVenta">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -2,9 +2,9 @@ package com.example.agroventa;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -18,11 +18,12 @@ import java.util.List;
 public class Menu extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ProductAdapter productAdapter;
+    private androidx.appcompat.widget.SearchView searchView;
     private List<Product> productList;
     private List<Product> filteredProductList; // Lista filtrada
     private Spinner spinner;
+    private ImageView btnBuy;
     private List<Product> spinnerFilteredProductList; // Productos filtrados por el Spinner
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,8 @@ public class Menu extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         spinner = findViewById(R.id.spinnerOptions);
-        androidx.appcompat.widget.SearchView searchView = findViewById(R.id.searchView);
+        searchView = findViewById(R.id.searchView);
+        btnBuy = findViewById(R.id.btnBuy);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -42,6 +44,10 @@ public class Menu extends AppCompatActivity {
         productAdapter = new ProductAdapter(Menu.this, filteredProductList);
         recyclerView.setAdapter(productAdapter);
 
+        btnBuy.setOnClickListener(view -> {
+            Intent intent = new Intent(Menu.this, sellProducto.class);
+            startActivity(intent);
+        });
 
         productAdapter.setOnClickListener((view, obj, position) -> {
             Intent intent = new Intent(Menu.this, ProductDetailActivity.class);
