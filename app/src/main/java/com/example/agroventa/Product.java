@@ -1,16 +1,21 @@
 package com.example.agroventa;
 
+import java.util.List;
+
 public class Product {
     private String title;
     private String description;
-    private int imageResourceId;
+    private List<String> imageResourceId;
     private String ubication;
     private String phoneContact;
     private String nameSeller;
     private double price;
     private String tipo;
 
-    public Product(String title, String description, int imageResourceId, String ubication, double price, String phoneContact, String nameSeller, String tipo) {
+    public Product() {
+    }
+
+    public Product(String title, String description, List<String> imageResourceId, String ubication, double price, String phoneContact, String nameSeller, String tipo) {
         this.title = title;
         this.description = description;
         this.imageResourceId = imageResourceId;
@@ -29,7 +34,7 @@ public class Product {
         return description;
     }
 
-    public int getImageResourceId() {
+    public List<String> getImageResourceId() {
         return imageResourceId;
     }
 

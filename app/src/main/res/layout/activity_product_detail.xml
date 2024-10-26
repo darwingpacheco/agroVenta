@@ -17,14 +17,14 @@
             app:cardBackgroundColor="@color/attention_light"
             app:cardElevation="8dp">
 
-            <ImageView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/productImage"
                 android:layout_width="250dp"
                 android:layout_height="250dp"
                 android:layout_gravity="center"
                 android:scaleType="fitXY"
                 android:padding="16dp"
-                android:src="@drawable/codigo_de_contrasena" />
+                android:orientation="horizontal"/>
 
         </androidx.cardview.widget.CardView>
 

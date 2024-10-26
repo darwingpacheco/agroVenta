@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
@@ -42,9 +44,15 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Product product = productList.get(position);
         holder.titleTextView.setText(product.getTitle());
         holder.descriptionTextView.setText(product.getDescription());
-        holder.productImageView.setImageResource(product.getImageResourceId());
 
-        // Aquí se establece el evento de clic
+        if (product.getImageResourceId() != null && !product.getImageResourceId().isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(product.getImageResourceId().get(0))
+                    .into(holder.productImageView);
+        } else {
+            holder.productImageView.setImageResource(R.drawable.cebolla);
+        }
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onClick(v, product, position);

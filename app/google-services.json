@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "227410709881",
+    "project_id": "agroapp-81377",
+    "storage_bucket": "agroapp-81377.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227410709881:android:c93cfc729fd0deb73eb3a8",
+        "android_client_info": {
+          "package_name": "com.example.agroventa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCTB-2RbKWeQkVDT01V1RuuUw_8_0ac3JE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

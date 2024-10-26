@@ -9,4 +9,9 @@
         <item>Apoya</item>
     </string-array>
 
+    <string-array name="optionsSell">
+        <item>Cosechas</item>
+        <item>Derivados</item>
+    </string-array>
+
 </resources>
