@@ -5,9 +5,11 @@
 
     <ImageView
         android:id="@+id/imageViewItem"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="300dp"
         android:layout_margin="4dp"
-        android:scaleType="centerCrop" />
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

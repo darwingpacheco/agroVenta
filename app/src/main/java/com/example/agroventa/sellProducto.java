@@ -1,5 +1,6 @@
 package com.example.agroventa;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -59,7 +60,7 @@ public class sellProducto extends AppCompatActivity {
         recyclerViewImages = findViewById(R.id.imageViewProduct);
 
         recyclerViewImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        imagesAdapter = new ImageProductsAdapter(selectedImagesList);
+        imagesAdapter = new ImageProductsAdapter(getApplicationContext(), selectedImagesList);
         recyclerViewImages.setAdapter(imagesAdapter);
 
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -106,14 +107,14 @@ public class sellProducto extends AppCompatActivity {
             return;
         }
 
-        List<Uri> imageUrls = new ArrayList<>();
+        List<String> imageUrls = new ArrayList<>();
         for (Uri imageUri : selectedImagesList) {
             String fileName = "image_" + System.currentTimeMillis();
             StorageReference imageRef = storageRef.child(fileName);
 
             UploadTask uploadTask = imageRef.putFile(imageUri);
             uploadTask.addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                imageUrls.add(Uri.parse(uri.toString()));
+                imageUrls.add(String.valueOf(Uri.parse(uri.toString())));
                 if (imageUrls.size() == selectedImagesList.size()) {
                     saveProductToFirestore(imageUrls);
                 }
@@ -123,31 +124,69 @@ public class sellProducto extends AppCompatActivity {
         }
     }
 
-    private void saveProductToFirestore(List<Uri> imageUrls) {
-        List<String> imageUrlStrings = new ArrayList<>();
-        for (Uri uri : imageUrls) {
-            imageUrlStrings.add(uri.toString());
-        }
+    private void saveProductToFirestore(List<String> imageUrls) {
+        // Convertir URIs de imágenes en Strings
+        List<String> imageUrlStrings = new ArrayList<>(imageUrls);
+
+        String title = edtTitle.getText().toString().trim();
+        String description = edtDescription.getText().toString().trim();
+        String ubication = edtUbicationProduct.getText().toString().trim();
+        String priceText = edtPrice.getText().toString().trim();
+        String phone = edtPhoneSeller.getText().toString().trim();
+        String name = edtNameSeller.getText().toString().trim();
+
+        if (!validateInputs(title, description, ubication, priceText, phone, name)) return;
+
+        double price = Double.parseDouble(priceText);
 
         Product product = new Product(
-                edtTitle.getText().toString(),
-                edtDescription.getText().toString(),
-                imageUrlStrings, // Usar la lista de Strings
-                edtUbicationProduct.getText().toString(),
-                Double.valueOf(edtPrice.getText().toString()),
-                edtPhoneSeller.getText().toString(),
-                edtNameSeller.getText().toString(),
+                title,
+                description,
+                imageUrlStrings,
+                ubication,
+                price,
+                phone,
+                name,
                 selectedItem
         );
 
         productsRef.add(product)
                 .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Producto publicado exitosamente", Toast.LENGTH_SHORT).show();
+                    showToast("Producto publicado exitosamente");
                     finish();
                 })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error al publicar el producto", Toast.LENGTH_SHORT).show();
-                });
+                .addOnFailureListener(e -> showToast("Error al publicar el producto"));
     }
 
+    private boolean validateInputs(String title, String description, String ubication, String priceText, String phone, String name) {
+        if (title.isEmpty()) {
+            showToast("Ingresa un título.");
+            return false;
+        }
+        if (description.isEmpty()) {
+            showToast("Ingresa una descripción.");
+            return false;
+        }
+        if (ubication.isEmpty()) {
+            showToast("Ingresa la ubicación del producto.");
+            return false;
+        }
+        if (priceText.isEmpty()) {
+            showToast("Ingresa el precio del producto.");
+            return false;
+        }
+        if (phone.isEmpty()) {
+            showToast("Ingresa un número de teléfono.");
+            return false;
+        }
+        if (name.isEmpty()) {
+            showToast("Ingresa el nombre del vendedor.");
+            return false;
+        }
+        return true;
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
 }

@@ -71,8 +71,8 @@ public class Menu extends AppCompatActivity {
             Intent intent = new Intent(Menu.this, ProductDetailActivity.class);
             intent.putExtra("productTitle", obj.getTitle());
             intent.putExtra("productDescription", obj.getDescription());
-            String[] imageStrings = obj.getImageResourceId().toArray(new String[0]);
-            intent.putExtra("productImages", imageStrings);
+            ArrayList<String> imageStrings = new ArrayList<>(obj.getImageResourceId());
+            intent.putStringArrayListExtra("productImages", imageStrings);
             intent.putExtra("productPrice", obj.getPrice());
             intent.putExtra("productUbication", obj.getUbication());
             intent.putExtra("productNameSeller", obj.getNameSeller());

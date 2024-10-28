@@ -1,5 +1,6 @@
 package com.example.agroventa;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
@@ -19,6 +21,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private Button btnBuy;
     private ArrayList<Uri> imageResourceId;
     private ImageProductsAdapter imagesAdapter;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +40,24 @@ public class ProductDetailActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String title = intent.getStringExtra("productTitle");
         String description = intent.getStringExtra("productDescription");
-        imageResourceId = getIntent().getParcelableArrayListExtra("productImage");
+        // Recibir la lista de imágenes como String
+        ArrayList<String> imageStrings = getIntent().getStringArrayListExtra("productImages");
+
+        // Convertir los Strings a Uri
+        List<Uri> imageUris = new ArrayList<>();
+        if (imageStrings != null) {
+            for (String imageString : imageStrings) {
+                Uri uri = Uri.parse(imageString); // Convertir el String a Uri
+                imageUris.add(uri);
+            }
+        }
         String ubication = intent.getStringExtra("productUbication");
         String phoneContact = intent.getStringExtra("productContactPhone");
         String nameSeller = intent.getStringExtra("productNameSeller");
         double price = intent.getDoubleExtra("productPrice", -1);
 
         productImage.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        imagesAdapter = new ImageProductsAdapter(imageResourceId);
+        imagesAdapter = new ImageProductsAdapter(getApplicationContext(), imageUris);
         productImage.setAdapter(imagesAdapter);
         productTitle.setText(title);
         productDescription.setText(description);
@@ -57,6 +70,8 @@ public class ProductDetailActivity extends AppCompatActivity {
             Intent intent1 = new Intent(this, MainActivity.class);
             startActivity(intent1);
         });
+
+
 
     }
 }

@@ -1,14 +1,18 @@
 package com.example.agroventa;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +21,9 @@ public class ImageProductsAdapter extends RecyclerView.Adapter<ImageProductsAdap
     private List<Uri> imagesList;
     private Context context;
 
-    public ImageProductsAdapter(List<Uri> imagesList) {
-        this.imagesList = imagesList != null ? imagesList : new ArrayList<>(); // Inicializar con una lista vacía si es null
+    public ImageProductsAdapter(Context context, List<Uri> imagesList) {
+        this.context = context;
+        this.imagesList = imagesList != null ? imagesList : new ArrayList<>();
     }
 
     @Override
@@ -35,7 +40,32 @@ public class ImageProductsAdapter extends RecyclerView.Adapter<ImageProductsAdap
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-        holder.imageView.setImageURI(imagesList.get(position));
+        Uri product = imagesList.get(position);
+        if (product != null){
+            Glide.with(context)
+                    .load(imagesList.get(position)) // Asumiendo que imagesList contiene URLs
+                    .placeholder(R.drawable.codigo_de_contrasena) // Imagen de placeholder
+                    .error(R.drawable.codigo_de_contrasena) // Imagen de error en caso de fallo
+                    .into(holder.imageView);
+
+        }else
+            holder.imageView.setImageURI(imagesList.get(position));
+
+        holder.imageView.setOnClickListener(v -> {
+            Uri imageUri = imagesList.get(position);  // Asegúrate de tener la URI correcta aquí
+            Intent viewIntent = new Intent(Intent.ACTION_VIEW);
+            viewIntent.setDataAndType(imageUri, "image/*");
+            viewIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK); // Añade FLAG_ACTIVITY_NEW_TASK
+
+            // Verifica si hay alguna aplicación de galería instalada
+            if (viewIntent.resolveActivity(context.getPackageManager()) != null) {
+                context.startActivity(viewIntent);
+            } else {
+                Toast.makeText(context, "No hay aplicaciones de galería instaladas", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder {

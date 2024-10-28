@@ -43,7 +43,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
         holder.titleTextView.setText(product.getTitle());
-        holder.descriptionTextView.setText(product.getDescription());
 
         if (product.getImageResourceId() != null && !product.getImageResourceId().isEmpty()) {
             Glide.with(holder.itemView.getContext())
@@ -67,13 +66,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
         TextView titleTextView;
-        TextView descriptionTextView;
         ImageView productImageView;
 
         public ProductViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.product_title);
-            descriptionTextView = itemView.findViewById(R.id.product_description);
             productImageView = itemView.findViewById(R.id.product_image);
         }
     }
