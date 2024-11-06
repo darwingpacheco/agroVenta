@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.agroventa"
-        minSdk 21
+        minSdk 23
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -32,6 +32,7 @@ android {
 dependencies {
     // Firebase BOM
     implementation platform('com.google.firebase:firebase-bom:32.0.0')
+    implementation 'com.google.firebase:firebase-auth:22.0.2'
     implementation 'com.google.firebase:firebase-database:20.3.0'
 
     // Dependencias de Firebase (sin especificar versiones)

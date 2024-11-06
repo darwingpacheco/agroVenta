@@ -1,6 +1,5 @@
 package com.example.agroventa;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -74,7 +73,6 @@ public class sellProducto extends AppCompatActivity {
         });
 
         btnAddImage.setOnClickListener(view -> openGalleryForImages());
-
         btnPublicar.setOnClickListener(view -> uploadProduct());
     }
 
@@ -103,7 +101,7 @@ public class sellProducto extends AppCompatActivity {
 
     private void uploadProduct() {
         if (selectedImagesList.isEmpty()) {
-            Toast.makeText(this, "Please select at least one image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Por favor seleccione al menos una imagen", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -119,13 +117,12 @@ public class sellProducto extends AppCompatActivity {
                     saveProductToFirestore(imageUrls);
                 }
             })).addOnFailureListener(e -> {
-                Toast.makeText(this, "Failed to upload image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No se pudo cargar la imagen", Toast.LENGTH_SHORT).show();
             });
         }
     }
 
     private void saveProductToFirestore(List<String> imageUrls) {
-        // Convertir URIs de imágenes en Strings
         List<String> imageUrlStrings = new ArrayList<>(imageUrls);
 
         String title = edtTitle.getText().toString().trim();

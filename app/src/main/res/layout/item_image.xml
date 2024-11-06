@@ -10,6 +10,6 @@
         android:maxHeight="300dp"
         android:layout_margin="4dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitXY" />
+        android:scaleType="fitCenter" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

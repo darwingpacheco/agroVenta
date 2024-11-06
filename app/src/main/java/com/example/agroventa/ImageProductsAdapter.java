@@ -28,7 +28,7 @@ public class ImageProductsAdapter extends RecyclerView.Adapter<ImageProductsAdap
 
     @Override
     public int getItemCount() {
-        return imagesList.size(); // Ahora no debería haber NullPointerException
+        return imagesList.size();
     }
 
     @NonNull
@@ -41,31 +41,28 @@ public class ImageProductsAdapter extends RecyclerView.Adapter<ImageProductsAdap
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
         Uri product = imagesList.get(position);
-        if (product != null){
-            Glide.with(context)
-                    .load(imagesList.get(position)) // Asumiendo que imagesList contiene URLs
-                    .placeholder(R.drawable.codigo_de_contrasena) // Imagen de placeholder
-                    .error(R.drawable.codigo_de_contrasena) // Imagen de error en caso de fallo
-                    .into(holder.imageView);
 
-        }else
+        if (product != null) {
+            Glide.with(context)
+                    .load(imagesList.get(position))
+                    .placeholder(R.drawable.galeria_de_imagenes)
+                    .error(R.drawable.galeria_de_imagenes)
+                    .into(holder.imageView);
+        } else
             holder.imageView.setImageURI(imagesList.get(position));
 
         holder.imageView.setOnClickListener(v -> {
-            Uri imageUri = imagesList.get(position);  // Asegúrate de tener la URI correcta aquí
+            Uri imageUri = imagesList.get(position);
             Intent viewIntent = new Intent(Intent.ACTION_VIEW);
             viewIntent.setDataAndType(imageUri, "image/*");
-            viewIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK); // Añade FLAG_ACTIVITY_NEW_TASK
+            viewIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
 
-            // Verifica si hay alguna aplicación de galería instalada
-            if (viewIntent.resolveActivity(context.getPackageManager()) != null) {
+            if (viewIntent.resolveActivity(context.getPackageManager()) != null)
                 context.startActivity(viewIntent);
-            } else {
+            else
                 Toast.makeText(context, "No hay aplicaciones de galería instaladas", Toast.LENGTH_SHORT).show();
-            }
+
         });
-
-
     }
 
     public static class ImageViewHolder extends RecyclerView.ViewHolder {
