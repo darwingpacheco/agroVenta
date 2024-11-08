@@ -30,10 +30,11 @@ public class sellProducto extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference productsRef;
     private StorageReference storageRef;
-    private EditText edtNameSeller, edtTitle, edtDescription, edtPrice, edtPhoneSeller, edtUbicationProduct;
+    private EditText edtNameSeller, edtTitle, edtDescription, edtPrice, edtPhoneSeller, edtUbicationProduct, edtQuantity;
     private Button btnPublicar, btnAddImage;
-    private Spinner spinnerOptions;
+    private Spinner spinnerOptions, spinnerMeasureType;
     private String selectedItem;
+    private String selectedMedida;
     private RecyclerView recyclerViewImages;
     private List<Uri> selectedImagesList = new ArrayList<>();
     private ImageProductsAdapter imagesAdapter;
@@ -55,8 +56,10 @@ public class sellProducto extends AppCompatActivity {
         edtUbicationProduct = findViewById(R.id.edtUbicationProduct);
         btnPublicar = findViewById(R.id.btnPublicar);
         spinnerOptions = findViewById(R.id.spinnerOptionsSeller);
+        spinnerMeasureType = findViewById(R.id.spinnerMeasureType);
         btnAddImage = findViewById(R.id.btnAddImage);
         recyclerViewImages = findViewById(R.id.imageViewProduct);
+        edtQuantity = findViewById(R.id.edtQuantity);
 
         recyclerViewImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imagesAdapter = new ImageProductsAdapter(getApplicationContext(), selectedImagesList);
@@ -66,6 +69,16 @@ public class sellProducto extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedItem = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {/**None*/}
+        });
+
+        spinnerMeasureType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedMedida = parent.getItemAtPosition(position).toString();
             }
 
             @Override
@@ -131,10 +144,12 @@ public class sellProducto extends AppCompatActivity {
         String priceText = edtPrice.getText().toString().trim();
         String phone = edtPhoneSeller.getText().toString().trim();
         String name = edtNameSeller.getText().toString().trim();
+        String cantidad = edtQuantity.getText().toString().trim();
 
-        if (!validateInputs(title, description, ubication, priceText, phone, name)) return;
+        if (!validateInputs(title, description, ubication, priceText, phone, name, cantidad)) return;
 
         double price = Double.parseDouble(priceText);
+        int cantidadInt = Integer.parseInt(cantidad);
 
         Product product = new Product(
                 title,
@@ -144,7 +159,9 @@ public class sellProducto extends AppCompatActivity {
                 price,
                 phone,
                 name,
-                selectedItem
+                selectedItem,
+                selectedMedida,
+                cantidadInt
         );
 
         productsRef.add(product)
@@ -155,7 +172,7 @@ public class sellProducto extends AppCompatActivity {
                 .addOnFailureListener(e -> showToast("Error al publicar el producto"));
     }
 
-    private boolean validateInputs(String title, String description, String ubication, String priceText, String phone, String name) {
+    private boolean validateInputs(String title, String description, String ubication, String priceText, String phone, String name, String cantidad) {
         if (title.isEmpty()) {
             showToast("Ingresa un título.");
             return false;
@@ -178,6 +195,21 @@ public class sellProducto extends AppCompatActivity {
         }
         if (name.isEmpty()) {
             showToast("Ingresa el nombre del vendedor.");
+            return false;
+        }
+
+        if (cantidad.isEmpty()) {
+            showToast("Ingrese la cantidad a vender.");
+            return false;
+        }
+
+        if (selectedMedida.isEmpty()) {
+            showToast("Seleccione el tipo de medida.");
+            return false;
+        }
+
+        if (selectedItem.isEmpty()) {
+            showToast("Seleccione el tipo de producto.");
             return false;
         }
         return true;

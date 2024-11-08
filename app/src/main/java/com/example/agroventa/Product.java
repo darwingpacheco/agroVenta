@@ -11,11 +11,14 @@ public class Product {
     private String nameSeller;
     private double price;
     private String tipo;
+    private String medida;
+    private int cantidad;
 
     public Product() {
+        // Firestore necesita este constructor vacío
     }
 
-    public Product(String title, String description, List<String> imageResourceId, String ubication, double price, String phoneContact, String nameSeller, String tipo) {
+    public Product(String title, String description, List<String> imageResourceId, String ubication, double price, String phoneContact, String nameSeller, String tipo, String medida, int Cantidad) {
         this.title = title;
         this.description = description;
         this.imageResourceId = imageResourceId;
@@ -24,6 +27,7 @@ public class Product {
         this.phoneContact = phoneContact;
         this.nameSeller = nameSeller;
         this.tipo = tipo;
+        this.cantidad = cantidad;
     }
 
     public String getTitle() {
@@ -76,5 +80,21 @@ public class Product {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
+    }
+
+    public String getMedida() {
+        return medida;
+    }
+
+    public void setMedida(String medida) {
+        this.medida = medida;
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
     }
 }

@@ -152,6 +152,71 @@
                 android:maxLength="40" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/inputProductQuantity"
+            style="?attr/textInputFilledStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/white_text_color"
+            android:hint="Cantidad"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputSellerLocation"
+            app:layout_constraintBottom_toTopOf="@+id/cardViewMeasureType">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtQuantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E6DFEB"
+                android:inputType="number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Spinner para el tipo de medida -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewMeasureType"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            app:cardElevation="10dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/inputProductQuantity"
+            app:layout_constraintBottom_toTopOf="@+id/cardViewSpinner">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- TextView que actúa como placeholder -->
+                <TextView
+                    android:id="@+id/textViewMeasurePlaceholder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+                    android:text="Tipo de Medida"
+                    android:textColor="@color/primary_400"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <!-- Spinner para seleccionar el tipo de medida -->
+                <Spinner
+                    android:id="@+id/spinnerMeasureType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="24dp"
+                    android:entries="@array/measureTypes"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/textViewMeasurePlaceholder" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
         <androidx.cardview.widget.CardView
             android:id="@+id/cardViewSpinner"
             android:layout_width="match_parent"
@@ -160,7 +225,7 @@
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/inputSellerLocation">
+            app:layout_constraintTop_toBottomOf="@id/cardViewMeasureType">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"

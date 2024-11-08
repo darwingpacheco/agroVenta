@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ProductDetailActivity extends AppCompatActivity {
     private RecyclerView productImage;
-    private TextView productTitle, productDescription, productPrice, sellerName, sellerContact, productLocation;
+    private TextView productTitle, productDescription, productPrice, sellerName, sellerContact, productLocation, cantidadDetail, medidaDetail;
     private Button btnBuy;
     private ImageProductsAdapter imagesAdapter;
 
@@ -34,6 +34,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         sellerContact = findViewById(R.id.sellerContact);
         productLocation = findViewById(R.id.ciudad);
         btnBuy = findViewById(R.id.btnBuy);
+        medidaDetail = findViewById(R.id.medidaDetail);
+        cantidadDetail = findViewById(R.id.cantidadDetail);
 
         Intent intent = getIntent();
         String title = intent.getStringExtra("productTitle");
@@ -53,6 +55,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         String phoneContact = intent.getStringExtra("productContactPhone");
         String nameSeller = intent.getStringExtra("productNameSeller");
         double price = intent.getDoubleExtra("productPrice", -1);
+        int cantidadReceived = intent.getIntExtra("cantidadMenu", -1);
+        String medidaReceived = intent.getStringExtra("medidaMenu");
 
         productImage.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imagesAdapter = new ImageProductsAdapter(getApplicationContext(), imageUris);
@@ -63,6 +67,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         sellerName.setText(nameSeller);
         sellerContact.setText(phoneContact);
         productLocation.setText(ubication);
+        cantidadDetail.setText(cantidadReceived + " ");
+        medidaDetail.setText(medidaReceived);
 
         btnBuy.setOnClickListener(view -> {
             Intent intent1 = new Intent(this, MainActivity.class);

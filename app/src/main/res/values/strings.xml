@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">agroVenta</string>
+    <string name="Bultos">Bultos</string>
+    <string name="Cargas">Cargas</string>
+    <string name="Canastillas">Canastillas</string>
+    <string name="Unidades">Unidades</string>
+    <string name="Cajas">Cajas</string>
 </resources>

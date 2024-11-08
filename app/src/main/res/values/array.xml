@@ -10,8 +10,18 @@
     </string-array>
 
     <string-array name="optionsSell">
+        <item></item>
         <item>Cosechas</item>
         <item>Derivados</item>
+    </string-array>
+
+    <string-array name="measureTypes">
+        <item></item>
+        <item>@string/Unidades</item>
+        <item>@string/Bultos</item>
+        <item>@string/Cajas</item>
+        <item>@string/Cargas</item>
+        <item>@string/Canastillas</item>
     </string-array>
 
 </resources>

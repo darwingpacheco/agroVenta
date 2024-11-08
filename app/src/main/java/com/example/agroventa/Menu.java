@@ -77,6 +77,8 @@ public class Menu extends AppCompatActivity {
             intent.putExtra("productUbication", obj.getUbication());
             intent.putExtra("productNameSeller", obj.getNameSeller());
             intent.putExtra("productContactPhone", obj.getPhoneContact());
+            intent.putExtra("cantidadMenu", obj.getCantidad());
+            intent.putExtra("medidaMenu", obj.getMedida());
             startActivity(intent);
         });
 
