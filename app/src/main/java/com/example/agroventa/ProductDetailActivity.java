@@ -57,6 +57,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         double price = intent.getDoubleExtra("productPrice", -1);
         int cantidadReceived = intent.getIntExtra("cantidadMenu", -1);
         String medidaReceived = intent.getStringExtra("medidaMenu");
+        String productId = intent.getStringExtra("idProduct");
 
         productImage.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imagesAdapter = new ImageProductsAdapter(getApplicationContext(), imageUris);
@@ -72,6 +73,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         btnBuy.setOnClickListener(view -> {
             Intent intent1 = new Intent(this, MainActivity.class);
+            intent1.putExtra("idProductDetail", productId);
             startActivity(intent1);
         });
     }

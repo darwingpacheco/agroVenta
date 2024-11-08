@@ -79,6 +79,7 @@ public class Menu extends AppCompatActivity {
             intent.putExtra("productContactPhone", obj.getPhoneContact());
             intent.putExtra("cantidadMenu", obj.getCantidad());
             intent.putExtra("medidaMenu", obj.getMedida());
+            intent.putExtra("idProduct", obj.getProductId());
             startActivity(intent);
         });
 
@@ -125,7 +126,7 @@ public class Menu extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Product product = document.toObject(Product.class);
                         if (product != null) {
-                            productList.add(product);
+                            productList.add(product.setProductId(document.getId()));
 
                             // Agregar al JSON
                             if (!first) {

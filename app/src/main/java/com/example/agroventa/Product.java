@@ -13,6 +13,7 @@ public class Product {
     private String tipo;
     private String medida;
     private int cantidad;
+    private String productId;
 
     public Product() {
         // Firestore necesita este constructor vacío
@@ -96,5 +97,14 @@ public class Product {
 
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public Product setProductId(String productId) {
+        this.productId = productId;
+        return this;
     }
 }

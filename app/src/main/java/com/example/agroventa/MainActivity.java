@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private TextInputEditText userEditText;
     private TextInputEditText passwordEditText;
     private FirebaseAuth mAuth;
+    private String productId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +27,14 @@ public class MainActivity extends AppCompatActivity {
         userEditText = findViewById(R.id.userEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
 
+        Intent intent = getIntent();
+        productId = intent.getStringExtra("idProductDetail");
+
         findViewById(R.id.btnLogin).setOnClickListener(view -> loginUser());
 
         findViewById(R.id.btnRegister).setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-            startActivity(intent);
+            Intent intent2 = new Intent(MainActivity.this, RegisterActivity.class);
+            startActivity(intent2);
         });
     }
 
@@ -48,9 +52,8 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(this, "Acceso correcto", Toast.LENGTH_SHORT).show();
-                        // Navegar a otra actividad si el inicio de sesión es exitoso
                     } else {
-                        Toast.makeText(this, "Revisa tu conexión a internet",
+                        Toast.makeText(this, "Revisa tus credenciales.",
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
