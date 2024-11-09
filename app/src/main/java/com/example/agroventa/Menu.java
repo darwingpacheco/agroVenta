@@ -186,7 +186,7 @@ public class Menu extends AppCompatActivity {
     }
 
     private String productToJson(Product product) {
-        return String.format("{\"title\": \"%s\", \"description\": \"%s\", \"price\": %.2f, \"tipo\": \"%s\", \"ubication\": \"%s\", \"nameSeller\": \"%s\", \"phoneContact\": \"%s\"}",
+        return String.format("{\"title\": \"%s\", \"description\": \"%s\", \"price\": \"%s\", \"tipo\": \"%s\", \"ubication\": \"%s\", \"nameSeller\": \"%s\", \"phoneContact\": \"%s\"}",
                 product.getTitle(), product.getDescription(), product.getPrice(), product.getTipo(), product.getUbication(), product.getNameSeller(), product.getPhoneContact());
     }
 }

@@ -198,7 +198,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorSecondary"
-            android:text="Realizar Compra"
+            android:text="CONTINUAR"
             android:layout_marginTop="16dp"
             android:textColor="@android:color/white" />
     </LinearLayout>

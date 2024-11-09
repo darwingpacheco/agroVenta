@@ -23,6 +23,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,14 +143,13 @@ public class sellProducto extends AppCompatActivity {
         String title = edtTitle.getText().toString().trim();
         String description = edtDescription.getText().toString().trim();
         String ubication = edtUbicationProduct.getText().toString().trim();
-        String priceText = edtPrice.getText().toString().trim();
+        String priceText = convertPrice(edtPrice.getText().toString().trim());
         String phone = edtPhoneSeller.getText().toString().trim();
         String name = edtNameSeller.getText().toString().trim();
         String cantidad = edtQuantity.getText().toString().trim();
 
         if (!validateInputs(title, description, ubication, priceText, phone, name, cantidad)) return;
 
-        double price = Double.parseDouble(priceText);
         int cantidadInt = Integer.parseInt(cantidad);
 
         Product product = new Product(
@@ -156,7 +157,7 @@ public class sellProducto extends AppCompatActivity {
                 description,
                 imageUrlStrings,
                 ubication,
-                price,
+                priceText,
                 phone,
                 name,
                 selectedItem,
@@ -217,5 +218,23 @@ public class sellProducto extends AppCompatActivity {
 
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public static String convertPrice(String price) {
+        try {
+            double amount = Double.parseDouble(price.replace("[,]", "").replace(".", ""));
+
+            DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+            symbols.setGroupingSeparator('.');
+            symbols.setDecimalSeparator(',');
+
+            // Creamos el formato con el símbolo configurado
+            DecimalFormat formatter = new DecimalFormat("#,###.##", symbols);
+            return formatter.format(amount);
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return price;
+        }
     }
 }

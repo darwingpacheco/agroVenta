@@ -54,7 +54,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         String ubication = intent.getStringExtra("productUbication");
         String phoneContact = intent.getStringExtra("productContactPhone");
         String nameSeller = intent.getStringExtra("productNameSeller");
-        double price = intent.getDoubleExtra("productPrice", -1);
+        String price = intent.getStringExtra("productPrice");
         int cantidadReceived = intent.getIntExtra("cantidadMenu", -1);
         String medidaReceived = intent.getStringExtra("medidaMenu");
         String productId = intent.getStringExtra("idProduct");
@@ -64,7 +64,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         productImage.setAdapter(imagesAdapter);
         productTitle.setText(title);
         productDescription.setText(description);
-        productPrice.setText("Precio: " + String.valueOf(price));
+        productPrice.setText("Precio: " + price);
         sellerName.setText(nameSeller);
         sellerContact.setText(phoneContact);
         productLocation.setText(ubication);
@@ -73,6 +73,9 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         btnBuy.setOnClickListener(view -> {
             Intent intent1 = new Intent(this, MainActivity.class);
+            intent1.putExtra("productTitle", title);
+            intent1.putExtra("productPrice", price);
+            intent1.putExtra("cantidadDetail", cantidadReceived);
             intent1.putExtra("idProductDetail", productId);
             startActivity(intent1);
         });

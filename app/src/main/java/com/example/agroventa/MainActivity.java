@@ -11,11 +11,16 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
     private TextInputEditText userEditText;
     private TextInputEditText passwordEditText;
     private FirebaseAuth mAuth;
     private String productId;
+    private String titleMove;
+    private String priceMove;
+    private int cantidadMove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         productId = intent.getStringExtra("idProductDetail");
+        titleMove = intent.getStringExtra("productTitle");
+        priceMove = intent.getStringExtra("productPrice");
+        cantidadMove = intent.getIntExtra("cantidadDetail",-1);
 
         findViewById(R.id.btnLogin).setOnClickListener(view -> loginUser());
 
@@ -52,6 +60,13 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(this, "Acceso correcto", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(MainActivity.this, makePurchase.class);
+                        intent.putExtra("titleMain", titleMove);
+                        intent.putExtra("priceMain", priceMove);
+                        intent.putExtra("cantidadMain", cantidadMove);
+                        intent.putExtra("idMain", productId);
+                        startActivity(intent);
                     } else {
                         Toast.makeText(this, "Revisa tus credenciales.",
                                 Toast.LENGTH_SHORT).show();
