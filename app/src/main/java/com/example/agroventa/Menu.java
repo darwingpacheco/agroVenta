@@ -63,7 +63,7 @@ public class Menu extends AppCompatActivity {
         cargarProductosDesdeFirestore("General");
 
         btnBuy.setOnClickListener(view -> {
-            Intent intent = new Intent(Menu.this, sellProducto.class);
+            Intent intent = new Intent(Menu.this, SellProducto.class);
             startActivity(intent);
         });
 

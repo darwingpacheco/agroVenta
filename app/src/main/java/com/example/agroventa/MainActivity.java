@@ -11,8 +11,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
     private TextInputEditText userEditText;
     private TextInputEditText passwordEditText;
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                         FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(this, "Acceso correcto", Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(MainActivity.this, makePurchase.class);
+                        Intent intent = new Intent(MainActivity.this, MakePurchase.class);
                         intent.putExtra("titleMain", titleMove);
                         intent.putExtra("priceMain", priceMove);
                         intent.putExtra("cantidadMain", cantidadMove);

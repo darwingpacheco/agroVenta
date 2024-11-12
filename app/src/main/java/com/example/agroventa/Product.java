@@ -28,7 +28,8 @@ public class Product {
         this.phoneContact = phoneContact;
         this.nameSeller = nameSeller;
         this.tipo = tipo;
-        this.cantidad = cantidad;
+        this.medida = medida;
+        this.cantidad = Cantidad;
     }
 
     public String getTitle() {

@@ -28,7 +28,7 @@ import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
-public class sellProducto extends AppCompatActivity {
+public class SellProducto extends AppCompatActivity {
     private FirebaseFirestore db;
     private CollectionReference productsRef;
     private StorageReference storageRef;
