@@ -3,6 +3,8 @@ package com.example.agroventa;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +13,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.checkerframework.common.subtyping.qual.Bottom;
+
 public class MainActivity extends AppCompatActivity {
     private TextInputEditText userEditText;
     private TextInputEditText passwordEditText;
@@ -18,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private String productId;
     private String titleMove;
     private String priceMove;
+    private TextView btnLogin;
     private int cantidadMove;
 
     @Override
@@ -36,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
         priceMove = intent.getStringExtra("productPrice");
         cantidadMove = intent.getIntExtra("cantidadDetail",-1);
 
-        findViewById(R.id.btnLogin).setOnClickListener(view -> loginUser());
+        btnLogin = findViewById(R.id.btnLogin);
+
+        btnLogin.setOnClickListener(view -> loginUser());
 
         findViewById(R.id.btnRegister).setOnClickListener(view -> {
             Intent intent2 = new Intent(MainActivity.this, RegisterActivity.class);
@@ -53,12 +60,14 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
+        btnLogin.setEnabled(false);
+
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         Toast.makeText(this, "Acceso correcto", Toast.LENGTH_SHORT).show();
-
+                        btnLogin.setEnabled(true);
                         Intent intent = new Intent(MainActivity.this, MakePurchase.class);
                         intent.putExtra("titleMain", titleMove);
                         intent.putExtra("priceMain", priceMove);
@@ -66,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                         intent.putExtra("idMain", productId);
                         startActivity(intent);
                     } else {
+                        btnLogin.setEnabled(true);
                         Toast.makeText(this, "Revisa tus credenciales.",
                                 Toast.LENGTH_SHORT).show();
                     }

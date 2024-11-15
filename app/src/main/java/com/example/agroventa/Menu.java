@@ -157,6 +157,14 @@ public class Menu extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (selectedItem != null)
+            cargarProductosDesdeFirestore(selectedItem);
+    }
+
     private List<Product> filtrarPorTipo(String tipo) {
         List<Product> productosFiltrados = new ArrayList<>();
         for (Product producto : productList) {

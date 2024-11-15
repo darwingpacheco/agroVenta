@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 
 public class ProductDetailActivity extends AppCompatActivity {
@@ -68,8 +69,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         sellerName.setText(nameSeller);
         sellerContact.setText(phoneContact);
         productLocation.setText(ubication);
-        cantidadDetail.setText(cantidadReceived + " ");
-        medidaDetail.setText(medidaReceived);
+        cantidadDetail.setText(cantidadReceived == 0 ? "No hay productos en STOCK" : cantidadReceived + " ");
+        medidaDetail.setText(cantidadReceived == 0 ? "" : medidaReceived);
 
         btnBuy.setOnClickListener(view -> {
             Intent intent1 = new Intent(this, MainActivity.class);
