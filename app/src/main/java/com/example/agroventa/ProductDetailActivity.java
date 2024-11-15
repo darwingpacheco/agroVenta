@@ -65,7 +65,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         productImage.setAdapter(imagesAdapter);
         productTitle.setText(title);
         productDescription.setText(description);
-        productPrice.setText("Precio: " + price);
+        productPrice.setText("Precio Unitario: " + price);
         sellerName.setText(nameSeller);
         sellerContact.setText(phoneContact);
         productLocation.setText(ubication);
