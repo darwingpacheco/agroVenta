@@ -1,7 +1,9 @@
 package com.example.agroventa;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -32,10 +34,13 @@ public class Menu extends AppCompatActivity {
     private List<Product> productList;
     private List<Product> filteredProductList;
     private Spinner spinner;
-    private ImageView btnBuy, btnUser;
+    private ImageView btnBuy, btnUser, btnUser2;
     private FirebaseFirestore firestore;
     private CollectionReference productsRef;
     private String selectedItem;
+    private Handler handler = new Handler();
+    private Runnable sessionCheckRunnable;
+    private boolean isSessionExpired = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,7 @@ public class Menu extends AppCompatActivity {
         searchView = findViewById(R.id.searchView);
         btnBuy = findViewById(R.id.btnBuy);
         btnUser = findViewById(R.id.btnUser);
+        btnUser2 = findViewById(R.id.btnUser2);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -62,16 +68,26 @@ public class Menu extends AppCompatActivity {
         productsRef = firestore.collection("products");
 
         cargarProductosDesdeFirestore("General");
+        startSessionCheck();
 
         btnBuy.setOnClickListener(view -> {
             Intent intent = new Intent(Menu.this, SellProducto.class);
             startActivity(intent);
         });
 
-        btnUser.setOnClickListener(view -> {
+        btnUser2.setOnClickListener(view -> {
+            SessionManager.getInstance().setClickNoLogin(true);
             Intent intent = new Intent(Menu.this, MainActivity.class);
             startActivity(intent);
         });
+
+        if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isExpiredTime()) {
+            btnUser.setVisibility(View.VISIBLE);
+            btnUser2.setVisibility(View.GONE);
+        } else {
+            btnUser.setVisibility(View.GONE);
+            btnUser2.setVisibility(View.VISIBLE);
+        }
 
         productAdapter.setOnClickListener((view, obj, position) -> {
             Intent intent = new Intent(Menu.this, ProductDetailActivity.class);
@@ -163,12 +179,49 @@ public class Menu extends AppCompatActivity {
         });
     }
 
+    private void startSessionCheck() {
+        sessionCheckRunnable = new Runnable() {
+            @Override
+            public void run() {
+
+                    runOnUiThread(() -> updateIconsBasedOnSession());
+
+                handler.postDelayed(this, 1000);
+            }
+        };
+
+        handler.post(sessionCheckRunnable);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+        startSessionCheck();
+
+        SessionManager.getInstance().startSession(new SessionListener() {
+            @Override
+            public void onSessionTick(long remainingTime) {
+
+            }
+
+            @Override
+            public void onSessionExpired() {
+                SessionManager.getInstance().setExpiredTime(true);
+            }
+        });
 
         if (selectedItem != null)
             cargarProductosDesdeFirestore(selectedItem);
+    }
+
+    private void updateIconsBasedOnSession() {
+        if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isExpiredTime()) {
+            btnUser.setVisibility(View.VISIBLE);
+            btnUser2.setVisibility(View.GONE);
+        } else {
+            btnUser.setVisibility(View.GONE);
+            btnUser2.setVisibility(View.VISIBLE);
+        }
     }
 
     private List<Product> filtrarPorTipo(String tipo) {
@@ -202,5 +255,14 @@ public class Menu extends AppCompatActivity {
     private String productToJson(Product product) {
         return String.format("{\"title\": \"%s\", \"description\": \"%s\", \"price\": \"%s\", \"tipo\": \"%s\", \"ubication\": \"%s\", \"nameSeller\": \"%s\", \"phoneContact\": \"%s\"}",
                 product.getTitle(), product.getDescription(), product.getPrice(), product.getTipo(), product.getUbication(), product.getNameSeller(), product.getPhoneContact());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Detener el Runnable para evitar fugas de memoria
+        if (handler != null && sessionCheckRunnable != null) {
+            handler.removeCallbacks(sessionCheckRunnable);
+        }
     }
 }

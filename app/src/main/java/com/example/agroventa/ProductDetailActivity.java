@@ -20,6 +20,8 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView productTitle, productDescription, productPrice, sellerName, sellerContact, productLocation, cantidadDetail, medidaDetail;
     private Button btnBuy;
     private ImageProductsAdapter imagesAdapter;
+    private String title, description, price, productId;
+    private int cantidadReceived;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +41,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         cantidadDetail = findViewById(R.id.cantidadDetail);
 
         Intent intent = getIntent();
-        String title = intent.getStringExtra("productTitle");
-        String description = intent.getStringExtra("productDescription");
+        title = intent.getStringExtra("productTitle");
+        description = intent.getStringExtra("productDescription");
 
         ArrayList<String> imageStrings = getIntent().getStringArrayListExtra("productImages");
 
@@ -55,10 +57,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         String ubication = intent.getStringExtra("productUbication");
         String phoneContact = intent.getStringExtra("productContactPhone");
         String nameSeller = intent.getStringExtra("productNameSeller");
-        String price = intent.getStringExtra("productPrice");
-        int cantidadReceived = intent.getIntExtra("cantidadMenu", -1);
+        price = intent.getStringExtra("productPrice");
+        cantidadReceived = intent.getIntExtra("cantidadMenu", -1);
         String medidaReceived = intent.getStringExtra("medidaMenu");
-        String productId = intent.getStringExtra("idProduct");
+        productId = intent.getStringExtra("idProduct");
 
         productImage.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imagesAdapter = new ImageProductsAdapter(getApplicationContext(), imageUris);
@@ -73,12 +75,21 @@ public class ProductDetailActivity extends AppCompatActivity {
         medidaDetail.setText(cantidadReceived == 0 ? "" : medidaReceived);
 
         btnBuy.setOnClickListener(view -> {
-            Intent intent1 = new Intent(this, MainActivity.class);
-            intent1.putExtra("productTitle", title);
-            intent1.putExtra("productPrice", price);
-            intent1.putExtra("cantidadDetail", cantidadReceived);
-            intent1.putExtra("idProductDetail", productId);
-            startActivity(intent1);
+            if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isClickNoLogin()) {
+                Intent intent2 = new Intent(ProductDetailActivity.this, MakePurchase.class);
+                intent2.putExtra("titleMain", title);
+                intent2.putExtra("priceMain", price);
+                intent2.putExtra("cantidadMain", cantidadReceived);
+                intent2.putExtra("idMain", productId);
+                startActivity(intent2);
+            } else {
+                Intent intent1 = new Intent(this, MainActivity.class);
+                intent1.putExtra("productTitle", title);
+                intent1.putExtra("productPrice", price);
+                intent1.putExtra("cantidadDetail", cantidadReceived);
+                intent1.putExtra("idProductDetail", productId);
+                startActivity(intent1);
+            }
         });
     }
 
