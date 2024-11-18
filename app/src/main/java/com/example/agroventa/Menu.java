@@ -32,7 +32,7 @@ public class Menu extends AppCompatActivity {
     private List<Product> productList;
     private List<Product> filteredProductList;
     private Spinner spinner;
-    private ImageView btnBuy;
+    private ImageView btnBuy, btnUser;
     private FirebaseFirestore firestore;
     private CollectionReference productsRef;
     private String selectedItem;
@@ -47,6 +47,7 @@ public class Menu extends AppCompatActivity {
         spinner = findViewById(R.id.spinnerOptions);
         searchView = findViewById(R.id.searchView);
         btnBuy = findViewById(R.id.btnBuy);
+        btnUser = findViewById(R.id.btnUser);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -64,6 +65,11 @@ public class Menu extends AppCompatActivity {
 
         btnBuy.setOnClickListener(view -> {
             Intent intent = new Intent(Menu.this, SellProducto.class);
+            startActivity(intent);
+        });
+
+        btnUser.setOnClickListener(view -> {
+            Intent intent = new Intent(Menu.this, MainActivity.class);
             startActivity(intent);
         });
 
