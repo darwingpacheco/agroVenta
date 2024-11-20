@@ -96,52 +96,13 @@
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewMeasureType"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            app:cardElevation="10dp"
-            app:layout_constraintTop_toBottomOf="@id/emailEditTextField"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/textViewMeasurePlaceholder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Rol"
-                    android:textColor="@color/primary_400"
-                    android:textSize="16sp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="12dp" />
-
-                <Spinner
-                    android:id="@+id/spinnerMeasureType"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/textViewMeasurePlaceholder"
-                    android:entries="@array/measureTypes" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
-
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/passwordEditTextRegisterField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
             android:hint="Contraseña"
             android:paddingVertical="8dp"
-            app:layout_constraintTop_toBottomOf="@id/cardViewMeasureType"
+            app:layout_constraintTop_toBottomOf="@id/emailEditTextField"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintVertical_bias="0.5">

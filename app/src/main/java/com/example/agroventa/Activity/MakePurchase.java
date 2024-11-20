@@ -14,11 +14,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.agroventa.R;
+import com.example.agroventa.singleton.SessionManager;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class MakePurchase extends AppCompatActivity {
 
@@ -31,6 +38,8 @@ public class MakePurchase extends AppCompatActivity {
     private String countFinal, contactPhoneFinal, shippingAddressFinal, buyerNameFinal;
     private String idBuy;
     private int cantidadBuy, calculateCount;
+    private String email;
+    private String priceFinalParse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,17 +92,74 @@ public class MakePurchase extends AppCompatActivity {
             thankYouDialog.show();
 
             int newCount = cantidadBuy - calculateCount;
+            email = SessionManager.getInstance().getUserSave();
+
+            if (email.isEmpty() || email == null) {
+                Toast.makeText(this, "Tu sesión finalizo", Toast.LENGTH_SHORT).show();
+                Intent intentPublic = new Intent(MakePurchase.this, Menu.class);
+                startActivity(intentPublic);
+                finish();
+            }
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+
+            // Obtener la fecha actual como String con el formato deseado
+            String fechaFormatted = format.format(new Date());
 
             db.collection("products")
                     .document(idBuy)
                     .update("cantidad", newCount)
                     .addOnSuccessListener(aVoid -> {
-                        thankYouDialog.dismiss();
-                        Intent intentPublic = new Intent(MakePurchase.this, Menu.class);
-                        startActivity(intentPublic);
-                        finish();
+
+                        db.collection("users")
+                                .whereEqualTo("email", email)
+                                .get()
+                                .addOnSuccessListener(queryDocumentSnapshots -> {
+                                    if (!queryDocumentSnapshots.isEmpty()) {
+
+                                        String userId = queryDocumentSnapshots.getDocuments().get(0).getId();
+
+                                        // Crea un mapa con los datos del producto comprado
+                                        Map<String, Object> purchaseData = new HashMap<>();
+                                        purchaseData.put("id", idBuy);
+                                        purchaseData.put("cantidad", calculateCount);
+                                        purchaseData.put("productComprado", titleBuy);
+                                        purchaseData.put("fecha", fechaFormatted); // Agrega una fecha opcional
+                                        purchaseData.put("priceComprado", priceFinalParse);
+
+                                        // Agrega el arreglo de compras al documento del usuario
+                                        db.collection("users")
+                                                .document(userId)
+                                                .update("purchasedProducts", FieldValue.arrayUnion(purchaseData))
+                                                .addOnSuccessListener(aVoid1 -> {
+                                                    // Éxito al agregar productos al array
+                                                    thankYouDialog.dismiss();
+                                                    Intent intentPublic = new Intent(MakePurchase.this, Menu.class);
+                                                    startActivity(intentPublic);
+                                                    finish();
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    showToast("Error al agregar producto");
+                                                });
+                                    } else
+                                        showToast("No se encontro el usuario");
+
+                                })
+                                .addOnFailureListener(e -> {
+                                    // Error al agregar productos al array
+                                    Dialog errorDialog = new Dialog(this);
+                                    errorDialog.setContentView(R.layout.thank_you_activity);
+                                    errorDialog.setCancelable(false);
+                                    errorDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+                                    errorDialog.show();
+
+                                    new Handler().postDelayed(() -> {
+                                        errorDialog.dismiss();
+                                    }, 2000);
+                                });
                     })
                     .addOnFailureListener(e -> {
                         Dialog errorDialog = new Dialog(this);
@@ -121,7 +187,7 @@ public class MakePurchase extends AppCompatActivity {
                 if (!cantidadIngresada.isEmpty()) {
                     BigDecimal cantidadParse = new BigDecimal(cantidadIngresada);
                     BigDecimal priceFinal = calculateTotal(priceBuy, cantidadParse);
-                    String priceFinalParse = convertPriceToTotal(String.valueOf(priceFinal));
+                    priceFinalParse = convertPriceToTotal(String.valueOf(priceFinal));
 
                     priceCalculate.setText(priceFinalParse);
                 } else {
