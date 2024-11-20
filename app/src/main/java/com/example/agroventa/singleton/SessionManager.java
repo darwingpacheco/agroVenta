@@ -6,7 +6,7 @@ import com.example.agroventa.interfaces.SessionListener;
 
 public class SessionManager {
     private static SessionManager instance;
-    private static final long SESSION_DURATION = 5 * 60 * 1000; // 5 minutos en milisegundos
+    private static final long SESSION_DURATION = 600000;
     private long remainingTime = SESSION_DURATION;
     private boolean isSessionActive = false;
     private CountDownTimer sessionTimer;
@@ -39,7 +39,7 @@ public class SessionManager {
             sessionTimer.cancel();
         }
 
-        sessionTimer = new CountDownTimer(60000, 1000) {
+        sessionTimer = new CountDownTimer(SESSION_DURATION, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 remainingTime = millisUntilFinished;

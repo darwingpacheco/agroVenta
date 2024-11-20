@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="#000000"
     android:padding="16dp"
     tools:context=".Activity.DetailUser">
 
@@ -109,7 +109,6 @@
 
                     </LinearLayout>
 
-
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -119,14 +118,13 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="8dp"
                 android:text="Compras realizadas"
-                android:textColor="#000"
+                android:textColor="@color/white"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewPurchases"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="16dp" />
+                android:layout_height="match_parent" />
         </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
