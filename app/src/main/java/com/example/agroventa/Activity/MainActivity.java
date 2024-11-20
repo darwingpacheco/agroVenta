@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity {
                             SessionManager.getInstance().setClickNoLogin(false);
                             Intent intent1 = new Intent(MainActivity.this, Menu.class);
                             startActivity(intent1);
+                            finish();
                         } else {
                             Toast.makeText(this, "Acceso correcto", Toast.LENGTH_SHORT).show();
                             intentToDetail();
@@ -184,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("cantidadMain", cantidadMove);
         intent.putExtra("idMain", productId);
         startActivity(intent);
+        finish();
     }
 
     public boolean isSessionActive() {
