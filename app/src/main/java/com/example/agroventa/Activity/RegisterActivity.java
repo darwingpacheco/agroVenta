@@ -1,14 +1,20 @@
 package com.example.agroventa.Activity;
 
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.agroventa.R;
 import com.example.agroventa.data.UserData;
@@ -24,6 +30,9 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerButton;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    private ScrollView scrollView;
+    private ConstraintLayout constraintId;
+    ViewGroup.MarginLayoutParams params;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +50,27 @@ public class RegisterActivity extends AppCompatActivity {
         nameEditText = findViewById(R.id.nameEditText);
         lastNameEditText = findViewById(R.id.lastNameEditText);
         telefonoEditText = findViewById(R.id.telefonoEditText);
+        scrollView = findViewById(R.id.scroll);
+        constraintId = findViewById(R.id.constraintId);
 
         registerButton.setOnClickListener(view -> registerUser());
+
+        constraintId.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+            Rect r = new Rect();
+            constraintId.getWindowVisibleDisplayFrame(r);
+
+            int screenHeight = constraintId.getRootView().getHeight();
+            int heightDifference = screenHeight - r.bottom;
+
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) scrollView.getLayoutParams();
+
+            if (heightDifference > 200)
+                params.setMargins(0, 0, 0, 340);
+            else
+                params.setMargins(0, 0, 0, 0);
+
+            scrollView.setLayoutParams(params);
+        });
     }
 
     private void registerUser() {

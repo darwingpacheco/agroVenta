@@ -14,6 +14,7 @@ public class SessionManager {
     private boolean expiredTime;
     private boolean clickNoLogin;
     private SessionListener listener;
+    private String userSave;
 
     private SessionManager() {
         isSessionActive = false;
@@ -53,6 +54,7 @@ public class SessionManager {
                 remainingTime = SESSION_DURATION;
                 if (listener != null) {
                     listener.onSessionExpired();
+                    setUserSave("");
                 }
             }
         };
@@ -113,6 +115,14 @@ public class SessionManager {
 
     public void setClickNoLogin(boolean clickNoLogin) {
         this.clickNoLogin = clickNoLogin;
+    }
+
+    public String getUserSave() {
+        return userSave;
+    }
+
+    public void setUserSave(String userSave) {
+        this.userSave = userSave;
     }
 }
 

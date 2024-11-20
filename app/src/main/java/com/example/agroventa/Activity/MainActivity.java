@@ -109,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
                             intentToDetail();
                         }
 
+                        SessionManager.getInstance().setUserSave(email);
+
                     } else {
                         btnLogin.setEnabled(true);
                         SessionManager.getInstance().setLogin(false);

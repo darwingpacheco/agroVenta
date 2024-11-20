@@ -96,6 +96,11 @@ public class Menu extends AppCompatActivity {
             btnUser2.setVisibility(View.VISIBLE);
         }
 
+        btnUser.setOnClickListener(view -> {
+            Intent intent = new Intent(Menu.this, DetailUser.class);
+            startActivity(intent);
+        });
+
         productAdapter.setOnClickListener((view, obj, position) -> {
             Intent intent = new Intent(Menu.this, ProductDetailActivity.class);
             intent.putExtra("productTitle", obj.getTitle());
