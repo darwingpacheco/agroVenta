@@ -1,7 +1,6 @@
-package com.example.agroventa;
+package com.example.agroventa.Activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -14,8 +13,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.agroventa.R;
+import com.example.agroventa.adapters.ProductAdapter;
+import com.example.agroventa.adapters.TutorialAdapter;
+import com.example.agroventa.data.Product;
+import com.example.agroventa.data.Tutorial;
+import com.example.agroventa.interfaces.SessionListener;
+import com.example.agroventa.singleton.SessionManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -113,7 +120,27 @@ public class Menu extends AppCompatActivity {
                 searchView.setQuery("", false);
                 searchView.clearFocus();
 
-                cargarProductosDesdeFirestore(selectedItem);
+                if (selectedItem.equals("Tutoriales")) {
+
+                    new Handler().postDelayed(() -> {
+                        recyclerView.setLayoutManager(new LinearLayoutManager(Menu.this));
+
+                        List<Tutorial> tutorialList = new ArrayList<>();
+                        tutorialList.add(new Tutorial("Cebolla deshidratada", "https://www.youtube.com/watch?v=IjPqYSliXEU"));
+                        tutorialList.add(new Tutorial("Shampoo de cebolla", "https://www.youtube.com/watch?v=HncVAITs4rs"));
+                        tutorialList.add(new Tutorial("Salsa de tomate", "https://www.youtube.com/watch?v=4gns1ixgZ48"));
+                        tutorialList.add(new Tutorial("Aceite de cebolla", "https://www.youtube.com/watch?v=mbWAWgfGP-8"));
+
+                        TutorialAdapter adapter = new TutorialAdapter(tutorialList, Menu.this);
+                        recyclerView.setAdapter(adapter);
+
+                    }, 1000);
+                } else {
+                    recyclerView.setLayoutManager(new GridLayoutManager(Menu.this, 2));
+                    cargarProductosDesdeFirestore(selectedItem);
+                    recyclerView.setAdapter(productAdapter);
+                }
+
             }
 
             @Override
@@ -184,7 +211,7 @@ public class Menu extends AppCompatActivity {
             @Override
             public void run() {
 
-                    runOnUiThread(() -> updateIconsBasedOnSession());
+                runOnUiThread(() -> updateIconsBasedOnSession());
 
                 handler.postDelayed(this, 1000);
             }
@@ -210,7 +237,7 @@ public class Menu extends AppCompatActivity {
             }
         });
 
-        if (selectedItem != null)
+        if (selectedItem != null && !selectedItem.equals("Tutoriales"))
             cargarProductosDesdeFirestore(selectedItem);
     }
 

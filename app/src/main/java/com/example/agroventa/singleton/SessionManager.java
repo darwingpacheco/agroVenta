@@ -1,6 +1,8 @@
-package com.example.agroventa;
+package com.example.agroventa.singleton;
 
 import android.os.CountDownTimer;
+
+import com.example.agroventa.interfaces.SessionListener;
 
 public class SessionManager {
     private static SessionManager instance;

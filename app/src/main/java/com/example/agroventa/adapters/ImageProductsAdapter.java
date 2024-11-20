@@ -1,4 +1,4 @@
-package com.example.agroventa;
+package com.example.agroventa.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.agroventa.R;
 
 import java.util.ArrayList;
 import java.util.List;

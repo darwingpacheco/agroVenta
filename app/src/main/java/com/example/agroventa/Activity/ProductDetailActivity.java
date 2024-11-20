@@ -1,4 +1,4 @@
-package com.example.agroventa;
+package com.example.agroventa.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -11,8 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.agroventa.R;
+import com.example.agroventa.singleton.SessionManager;
+import com.example.agroventa.adapters.ImageProductsAdapter;
+
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.List;
 
 public class ProductDetailActivity extends AppCompatActivity {

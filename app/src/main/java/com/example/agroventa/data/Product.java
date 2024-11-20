@@ -1,4 +1,4 @@
-package com.example.agroventa;
+package com.example.agroventa.data;
 
 import java.util.List;
 

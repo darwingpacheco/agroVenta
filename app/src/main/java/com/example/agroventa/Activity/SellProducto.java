@@ -1,4 +1,4 @@
-package com.example.agroventa;
+package com.example.agroventa.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +17,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.agroventa.data.Product;
+import com.example.agroventa.R;
+import com.example.agroventa.adapters.ImageProductsAdapter;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;

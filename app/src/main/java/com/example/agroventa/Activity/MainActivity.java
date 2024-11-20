@@ -1,4 +1,4 @@
-package com.example.agroventa;
+package com.example.agroventa.Activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +10,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.agroventa.R;
+import com.example.agroventa.interfaces.SessionListener;
+import com.example.agroventa.singleton.SessionManager;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

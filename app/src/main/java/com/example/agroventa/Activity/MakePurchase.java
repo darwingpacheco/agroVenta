@@ -1,4 +1,4 @@
-package com.example.agroventa;
+package com.example.agroventa.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.agroventa.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.math.BigDecimal;
