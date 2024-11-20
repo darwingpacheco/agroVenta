@@ -5,6 +5,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +31,7 @@ import java.util.Map;
 public class DetailUser extends AppCompatActivity {
 
     private ImageView userImage;
+    private ImageView logoutButton;
     private TextView userName;
     private TextView userEmail;
     private TextView userPhone;
@@ -56,11 +58,20 @@ public class DetailUser extends AppCompatActivity {
         userPhone = findViewById(R.id.userPhone);
         purchasesTitle = findViewById(R.id.purchasesTitle);
         recycler = findViewById(R.id.recyclerViewPurchases);
+        logoutButton = findViewById(R.id.logoutButton);
 
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
 
         db = FirebaseFirestore.getInstance();
+
+        logoutButton.setOnClickListener(view -> {
+            SessionManager.getInstance().setLogin(false);
+            SessionManager.getInstance().setExpiredTime(true);
+            Intent intent = new Intent(DetailUser.this, Menu.class);
+            startActivity(intent);
+            finish();
+        });
 
         String email = SessionManager.getInstance().getUserSave();
         if (email != null)
