@@ -3,9 +3,12 @@ package com.example.agroventa.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -37,7 +40,7 @@ import java.util.List;
 public class Menu extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ProductAdapter productAdapter;
-    private androidx.appcompat.widget.SearchView searchView;
+    private EditText searchView;
     private List<Product> productList;
     private List<Product> filteredProductList;
     private Spinner spinner;
@@ -59,8 +62,8 @@ public class Menu extends AppCompatActivity {
         spinner = findViewById(R.id.spinnerOptions);
         searchView = findViewById(R.id.searchView);
         btnBuy = findViewById(R.id.btnBuy);
-        btnUser = findViewById(R.id.btnUser);
-        btnUser2 = findViewById(R.id.btnUser2);
+        //btnUser = findViewById(R.id.btnUser);
+        //btnUser2 = findViewById(R.id.btnUser2);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -82,24 +85,24 @@ public class Menu extends AppCompatActivity {
             startActivity(intent);
         });
 
-        btnUser2.setOnClickListener(view -> {
-            SessionManager.getInstance().setClickNoLogin(true);
-            Intent intent = new Intent(Menu.this, MainActivity.class);
-            startActivity(intent);
-        });
+//        btnUser2.setOnClickListener(view -> {
+//            SessionManager.getInstance().setClickNoLogin(true);
+//            Intent intent = new Intent(Menu.this, MainActivity.class);
+//            startActivity(intent);
+//        });
 
         if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isExpiredTime()) {
-            btnUser.setVisibility(View.VISIBLE);
-            btnUser2.setVisibility(View.GONE);
+            //btnUser.setVisibility(View.VISIBLE);
+            //btnUser2.setVisibility(View.GONE);
         } else {
-            btnUser.setVisibility(View.GONE);
-            btnUser2.setVisibility(View.VISIBLE);
+            //btnUser.setVisibility(View.GONE);
+            //btnUser2.setVisibility(View.VISIBLE);
         }
 
-        btnUser.setOnClickListener(view -> {
-            Intent intent = new Intent(Menu.this, DetailUser.class);
-            startActivity(intent);
-        });
+//        btnUser.setOnClickListener(view -> {
+//            Intent intent = new Intent(Menu.this, DetailUser.class);
+//            startActivity(intent);
+//        });
 
         productAdapter.setOnClickListener((view, obj, position) -> {
             Intent intent = new Intent(Menu.this, ProductDetailActivity.class);
@@ -122,7 +125,7 @@ public class Menu extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedItem = parent.getItemAtPosition(position).toString();
 
-                searchView.setQuery("", false);
+                searchView.setText("");
                 searchView.clearFocus();
 
                 if (selectedItem.equals("Tutoriales")) {
@@ -153,18 +156,27 @@ public class Menu extends AppCompatActivity {
             }
         });
 
-        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+
+
+        searchView.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
-                filtrarProductosPorNombre(newText);
-                return true;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                filtrarProductosPorNombre(s.toString());
+
             }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
         });
+
     }
 
     private void cargarProductosDesdeFirestore(String tipoFiltro) {
@@ -229,6 +241,7 @@ public class Menu extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         startSessionCheck();
+        searchView.clearFocus();
 
         SessionManager.getInstance().startSession(new SessionListener() {
             @Override
@@ -248,11 +261,11 @@ public class Menu extends AppCompatActivity {
 
     private void updateIconsBasedOnSession() {
         if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isExpiredTime()) {
-            btnUser.setVisibility(View.VISIBLE);
-            btnUser2.setVisibility(View.GONE);
+            //btnUser.setVisibility(View.VISIBLE);
+            //btnUser2.setVisibility(View.GONE);
         } else {
-            btnUser.setVisibility(View.GONE);
-            btnUser2.setVisibility(View.VISIBLE);
+            //btnUser.setVisibility(View.GONE);
+            //btnUser2.setVisibility(View.VISIBLE);
         }
     }
 
@@ -296,5 +309,6 @@ public class Menu extends AppCompatActivity {
         if (handler != null && sessionCheckRunnable != null) {
             handler.removeCallbacks(sessionCheckRunnable);
         }
+        searchView.clearFocus();
     }
 }

@@ -1,7 +1,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <solid android:color="@color/white" /> <!-- Color de fondo del layout -->
+    <solid android:color="#e2f5ba" /> <!-- Color de fondo del layout -->
 
     <corners android:radius="10dp" /> <!-- Esquinas redondeadas -->
 
