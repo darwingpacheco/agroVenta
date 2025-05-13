@@ -175,4 +175,7 @@
     <color name="white_20">#33ffffff</color>
     <color name="white_10">#19ffffff</color>
     <color name="transparent">#00FFFFFF</color>
+    <color name="fondo_form">#CCEA8D</color>
+    <color name="boton1">#005148</color>
+    <color name="boton2">#A6BC09</color>
 </resources>

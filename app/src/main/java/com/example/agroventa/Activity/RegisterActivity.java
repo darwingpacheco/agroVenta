@@ -38,39 +38,20 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        designView();
 
         auth = FirebaseAuth.getInstance();
 
         emailEditText = findViewById(R.id.emailEditText);
         passwordEditText = findViewById(R.id.passwordEditTextRegister);
         confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
-        registerButton = findViewById(R.id.registerButton);
+        registerButton = findViewById(R.id.btnRegister);
         progressBar = findViewById(R.id.progressBar);
         nameEditText = findViewById(R.id.nameEditText);
         lastNameEditText = findViewById(R.id.lastNameEditText);
         telefonoEditText = findViewById(R.id.telefonoEditText);
-        scrollView = findViewById(R.id.scroll);
-        constraintId = findViewById(R.id.constraintId);
 
         registerButton.setOnClickListener(view -> registerUser());
 
-        constraintId.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            Rect r = new Rect();
-            constraintId.getWindowVisibleDisplayFrame(r);
-
-            int screenHeight = constraintId.getRootView().getHeight();
-            int heightDifference = screenHeight - r.bottom;
-
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) scrollView.getLayoutParams();
-
-            if (heightDifference > 200)
-                params.setMargins(0, 0, 0, 340);
-            else
-                params.setMargins(0, 0, 0, 0);
-
-            scrollView.setLayoutParams(params);
-        });
     }
 
     private void registerUser() {
@@ -135,15 +116,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        designView();
     }
 
-    public void designView() {
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-    }
+
 }

@@ -25,7 +25,7 @@
             android:theme="@style/Theme.AgroVentaTres" />
         <activity
             android:name=".Activity.RegisterActivity"
-            android:exported="false"
+            android:exported="true"
             android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.AgroVentaTres" />
         <activity
