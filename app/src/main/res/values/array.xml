@@ -9,13 +9,13 @@
     </string-array>
 
     <string-array name="optionsSell">
-        <item></item>
+        <item>Seleccione...</item>
         <item>Cosechas</item>
         <item>Derivados</item>
     </string-array>
 
     <string-array name="measureTypes">
-        <item></item>
+        <item>Seleccione...</item>
         <item>@string/Unidades</item>
         <item>@string/Bultos</item>
         <item>@string/Cajas</item>

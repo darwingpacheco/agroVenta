@@ -30,6 +30,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
+import android.widget.ArrayAdapter;
 
 public class SellProducto extends AppCompatActivity {
     private FirebaseFirestore db;
@@ -69,6 +70,9 @@ public class SellProducto extends AppCompatActivity {
         recyclerViewImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imagesAdapter = new ImageProductsAdapter(getApplicationContext(), selectedImagesList);
         recyclerViewImages.setAdapter(imagesAdapter);
+
+        spinnerMeasureType.setAdapter(adapter(R.array.measureTypes, R.layout.spinner));
+        spinnerOptions.setAdapter(adapter(R.array.optionsSell, R.layout.spinner));
 
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -115,6 +119,7 @@ public class SellProducto extends AppCompatActivity {
             }
             imagesAdapter.notifyDataSetChanged();
         }
+        recyclerViewImages.setVisibility(View.VISIBLE);
     });
 
     private void uploadProduct() {
@@ -239,5 +244,15 @@ public class SellProducto extends AppCompatActivity {
             e.printStackTrace();
             return price;
         }
+    }
+
+    public ArrayAdapter adapter(int lista, int layoutId){
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                lista,
+                layoutId
+        );
+        adapter.setDropDownViewResource(R.layout.textspinner);
+        return adapter;
     }
 }

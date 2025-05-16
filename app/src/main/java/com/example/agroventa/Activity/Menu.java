@@ -44,7 +44,7 @@ public class Menu extends AppCompatActivity {
     private List<Product> productList;
     private List<Product> filteredProductList;
     private Spinner spinner;
-    private ImageView btnBuy, btnUser, btnUser2;
+    private ImageView btnBuy, btn_user, btnUser2;
     private FirebaseFirestore firestore;
     private CollectionReference productsRef;
     private String selectedItem;
@@ -62,7 +62,7 @@ public class Menu extends AppCompatActivity {
         spinner = findViewById(R.id.spinnerOptions);
         searchView = findViewById(R.id.searchView);
         btnBuy = findViewById(R.id.btnBuy);
-        //btnUser = findViewById(R.id.btnUser);
+        btn_user = findViewById(R.id.btn_user);
         //btnUser2 = findViewById(R.id.btnUser2);
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
@@ -99,10 +99,16 @@ public class Menu extends AppCompatActivity {
             //btnUser2.setVisibility(View.VISIBLE);
         }
 
-//        btnUser.setOnClickListener(view -> {
-//            Intent intent = new Intent(Menu.this, DetailUser.class);
-//            startActivity(intent);
-//        });
+        btn_user.setOnClickListener(view -> {
+            if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isExpiredTime()) {
+                Intent intent = new Intent(Menu.this, DetailUser.class);
+                startActivity(intent);
+            } else {
+                SessionManager.getInstance().setClickNoLogin(true);
+                Intent intent = new Intent(Menu.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         productAdapter.setOnClickListener((view, obj, position) -> {
             Intent intent = new Intent(Menu.this, ProductDetailActivity.class);
