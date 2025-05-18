@@ -1,9 +1,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-    <solid android:color="@color/boton2" /> <!-- Color de fondo -->
+    <solid android:color="@color/white" /> <!-- Color de fondo -->
 
-    <corners android:radius="8dp" /> <!-- Bordes suavemente redondeados -->
+    <corners android:radius="10dp" /> <!-- Bordes suavemente redondeados -->
 
     <!-- Opcional: borde alrededor -->
     <!-- <stroke android:width="1dp" android:color="#FF3700B3" /> -->

@@ -1,5 +1,6 @@
 package com.example.agroventa.Activity;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerButton;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
+    private TextView txt_login;
     private ScrollView scrollView;
     private ConstraintLayout constraintId;
     ViewGroup.MarginLayoutParams params;
@@ -37,20 +40,27 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.view_register);
 
         auth = FirebaseAuth.getInstance();
 
-        emailEditText = findViewById(R.id.emailEditText);
-        passwordEditText = findViewById(R.id.passwordEditTextRegister);
-        confirmPasswordEditText = findViewById(R.id.confirmPasswordEditText);
+        emailEditText = findViewById(R.id.edt_email);
+        passwordEditText = findViewById(R.id.edt_password);
+        confirmPasswordEditText = findViewById(R.id.passwordRepitEditText);
         registerButton = findViewById(R.id.btnRegister);
         progressBar = findViewById(R.id.progressBar);
-        nameEditText = findViewById(R.id.nameEditText);
-        lastNameEditText = findViewById(R.id.lastNameEditText);
-        telefonoEditText = findViewById(R.id.telefonoEditText);
+        nameEditText = findViewById(R.id.edt_name);
+        lastNameEditText = findViewById(R.id.edt_apellidos);
+        telefonoEditText = findViewById(R.id.edt_telefono);
+        txt_login = findViewById(R.id.txt_login);
 
         registerButton.setOnClickListener(view -> registerUser());
+
+        txt_login.setOnClickListener(view -> {
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
     }
 

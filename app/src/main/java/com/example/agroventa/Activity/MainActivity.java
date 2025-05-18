@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
     private long remainingTime = SESSION_DURATION; // Tiempo restante
     private boolean isSessionActive = false;
     private CountDownTimer sessionTimer;
-    private TextInputEditText userEditText;
-    private TextInputEditText passwordEditText;
+    private EditText userEditText;
+    private EditText passwordEditText;
     private FirebaseAuth mAuth;
     private String productId;
     private String titleMove;
@@ -51,17 +52,17 @@ public class MainActivity extends AppCompatActivity {
         priceMove = intent.getStringExtra("productPrice");
         cantidadMove = intent.getIntExtra("cantidadDetail", -1);
 
-        btnLogin = findViewById(R.id.btnLogin);
+        //btnLogin = findViewById(R.id.btnLogin);
 
         if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isClickNoLogin())
             intentToDetail();
 
-        btnLogin.setOnClickListener(view -> loginUser());
+        //btnLogin.setOnClickListener(view -> loginUser());
 
-        findViewById(R.id.btnRegister).setOnClickListener(view -> {
-            Intent intent2 = new Intent(MainActivity.this, RegisterActivity.class);
-            startActivity(intent2);
-        });
+        //findViewById(R.id.btnRegister).setOnClickListener(view -> {
+            //Intent intent2 = new Intent(MainActivity.this, RegisterActivity.class);
+            //startActivity(intent2);
+        //});
     }
 
     private void loginUser() {

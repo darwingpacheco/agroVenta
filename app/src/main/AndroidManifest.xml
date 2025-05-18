@@ -16,9 +16,20 @@
         android:windowSoftInputMode="stateHidden|adjustPan"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.Home"
+            android:exported="true"
+            android:theme="@style/Theme.AgroVenta">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".Activity.DetailUser"
-            android:theme="@style/Theme.AgroVentaDos"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.AgroVentaDos" />
         <activity
             android:name=".Activity.MakePurchase"
             android:exported="false"
@@ -26,8 +37,8 @@
         <activity
             android:name=".Activity.RegisterActivity"
             android:exported="true"
-            android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.AgroVentaTres" />
+            android:theme="@style/Theme.AgroVentaTres"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activity.SellProducto"
             android:exported="false"
@@ -42,14 +53,8 @@
             android:theme="@style/Theme.AgroVentaTres" />
         <activity
             android:name=".Activity.Menu"
-            android:exported="true"
-            android:theme="@style/Theme.AgroVenta">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="false"
+            android:theme="@style/Theme.AgroVenta"/>
     </application>
 
 </manifest>

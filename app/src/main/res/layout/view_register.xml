@@ -1,11 +1,9 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:fitsSystemWindows="true"
-    tools:context=".Activity.MainActivity">
+    android:fitsSystemWindows="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -28,7 +26,7 @@
                 android:id="@+id/ly_titulo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="30dp"
                 android:gravity="center"
                 android:orientation="vertical">
 
@@ -69,9 +67,47 @@
                     android:orientation="vertical">
 
                     <EditText
-                        android:id="@+id/userEditText"
+                        android:id="@+id/edt_name"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
+                        android:background="@drawable/edittext_background"
+                        android:hint="Nombre completo"
+                        android:inputType="text"
+                        android:padding="12dp"
+                        android:textColor="#000000"
+                        android:textColorHint="@color/gray_dark"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/edt_apellidos"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittext_background"
+                        android:hint="Apellidos"
+                        android:inputType="text"
+                        android:padding="12dp"
+                        android:textColor="#000000"
+                        android:textColorHint="@color/gray_dark"
+                        android:textSize="16sp" />
+
+                    <EditText
+                        android:id="@+id/edt_telefono"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittext_background"
+                        android:hint="Teléfono"
+                        android:inputType="numberDecimal"
+                        android:padding="12dp"
+                        android:textColor="#000000"
+                        android:textColorHint="@color/gray_dark"
+                        android:textSize="16sp" />
+                    <EditText
+                        android:id="@+id/edt_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
                         android:background="@drawable/edittext_background"
                         android:hint="Correo electrónico"
                         android:inputType="textEmailAddress"
@@ -81,7 +117,7 @@
                         android:textSize="16sp" />
 
                     <EditText
-                        android:id="@+id/passwordEditText"
+                        android:id="@+id/edt_password"
                         android:layout_width="match_parent"
                         android:layout_height="55dp"
                         android:layout_marginTop="10dp"
@@ -93,12 +129,25 @@
                         android:textColorHint="@color/gray_dark"
                         android:textSize="16sp" />
 
+                    <EditText
+                        android:id="@+id/passwordRepitEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/edittext_background"
+                        android:hint="Confirmar contraseña"
+                        android:inputType="textPassword"
+                        android:padding="12dp"
+                        android:textColor="#000000"
+                        android:textColorHint="@color/gray_dark"
+                        android:textSize="16sp" />
+
                     <TextView
-                        android:id="@+id/txt_password"
+                        android:id="@+id/txt_login"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="¿Olvidó su contraseña?"
+                        android:text="¿Ya tienes una cuenta? Inicia sesión"
                         android:textColor="@color/gray_dark"
                         android:textSize="18sp" />
 
@@ -112,17 +161,26 @@
                         android:foreground="@null"
                         android:gravity="center"
                         android:stateListAnimator="@null"
-                        android:text="Entrar"
+                        android:text="Registrarse"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="20sp" />
 
                 </LinearLayout>
 
-
             </LinearLayout>
 
         </LinearLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:visibility="gone" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>
