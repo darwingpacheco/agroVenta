@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.agroventa.R;
 import com.example.agroventa.interfaces.SessionListener;
@@ -31,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
     private String productId;
     private String titleMove;
     private String priceMove;
-    private TextView btnLogin;
     private int cantidadMove;
     private SharedPreferences preferences;
+    AppCompatButton btnInit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
         userEditText = findViewById(R.id.userEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
         TextView txt_password = findViewById(R.id.txt_password);
+        btnInit = findViewById(R.id.btnInit);
 
         preferences = getSharedPreferences("SessionPrefs", MODE_PRIVATE);
         remainingTime = preferences.getLong("remainingTime", SESSION_DURATION);
@@ -55,17 +57,11 @@ public class MainActivity extends AppCompatActivity {
         priceMove = intent.getStringExtra("productPrice");
         cantidadMove = intent.getIntExtra("cantidadDetail", -1);
 
-        //btnLogin = findViewById(R.id.btnLogin);
 
         if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isClickNoLogin())
             intentToDetail();
 
-        //btnLogin.setOnClickListener(view -> loginUser());
-
-        //findViewById(R.id.btnRegister).setOnClickListener(view -> {
-            //Intent intent2 = new Intent(MainActivity.this, RegisterActivity.class);
-            //startActivity(intent2);
-        //});
+        btnInit.setOnClickListener(view -> loginUser());
 
         txt_password.setOnClickListener(view -> {
             Intent intentPass = new Intent(this, RecuperarContraseña.class);
@@ -83,13 +79,13 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        btnLogin.setEnabled(false);
+        btnInit.setEnabled(false);
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
-                        btnLogin.setEnabled(true);
+                        btnInit.setEnabled(true);
                         SessionManager.getInstance().setLogin(true);
                         SessionManager.getInstance().setSessionActive(true);
                         SessionManager.getInstance().setExpiredTime(false);
@@ -122,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                         SessionManager.getInstance().setUserSave(email);
 
                     } else {
-                        btnLogin.setEnabled(true);
+                        btnInit.setEnabled(true);
                         SessionManager.getInstance().setLogin(false);
                         Toast.makeText(this, "Revisa tus credenciales.", Toast.LENGTH_SHORT).show();
 

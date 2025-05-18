@@ -3,20 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#01415B">
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="15dp">
+        android:padding="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/productImage"
@@ -24,61 +23,39 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" />
 
-            <TextView
-                android:id="@+id/productTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Product Title"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                android:textStyle="bold" />
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/txtDescription"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/textm"
-                android:text="Descripción"
-                android:textColor="#F1F1F1"
-                android:textSize="18sp" />
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="1dp"
-                android:background="#02516F" />
-
-        </LinearLayout>
-
 
         <TextView
-            android:id="@+id/productDescription"
+            android:id="@+id/productTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="16dp"
-            android:text="Product Description"
-            android:textColor="#B0BEC5"
-            android:textSize="16sp" />
+            android:layout_marginTop="20dp"
+            android:text="Product Title"
+            android:textColor="@color/gray_dark"
+            android:textSize="30sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/productPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Precio: $0.00"
-            android:textColor="#E53935"
-            android:textSize="18sp"
+            android:layout_marginTop="5dp"
+            android:text="$0.00"
+            android:textColor="#4F4F4F"
+            android:textSize="25sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/productDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Product Description"
+            android:textColor="#4F4F4F"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -89,8 +66,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:text="Cantidad Disponible: "
-                android:textColor="#4CAF50"
+                android:text="Cantidad: "
+                android:textColor="#4F4F4F"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -100,9 +77,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="0 "
-                android:textColor="#D9D9D9"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="#4F4F4F"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/medidaDetail"
@@ -110,104 +86,100 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="Cajas"
-                android:textColor="#D9D9D9"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="#4F4F4F"
+                android:textSize="18sp" />
         </LinearLayout>
 
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@color/background_100"
-            app:cardCornerRadius="18dp"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <ImageView
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:layout_marginEnd="16dp"
-                    android:src="@drawable/usuario" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/sellerName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="xxxx xxxx xxxx"
-                        android:textColor="#231F1F"
-                        android:textSize="22sp" />
-
-                    <TextView
-                        android:id="@+id/sellerContact"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="1234567890"
-                        android:textColor="#231F1F"
-                        android:textSize="20sp" />
-                </LinearLayout>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="2dp"
+            android:layout_marginBottom="10dp"
+            android:background="#BDBDBD" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:paddingTop="12dp"
+                android:src="@drawable/location" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:paddingStart="12dp"
                 android:paddingTop="12dp"
                 android:text="Ubicación: "
-                android:textColor="#B0BEC5"
+                android:textColor="#4F4F4F"
                 android:textSize="18sp"
                 android:textStyle="bold" />
-
-            <ImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:paddingStart="12dp"
-                android:paddingTop="12dp"
-                android:src="@drawable/ubicacion" />
 
             <TextView
                 android:id="@+id/ciudad"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingStart="12dp"
                 android:paddingTop="12dp"
                 android:text="Abrego"
-                android:textColor="#B0BEC5"
+                android:textColor="#4F4F4F"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
-        
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/user" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/sellerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="xxxx xxxx xxxx"
+                    android:textColor="#4F4F4F"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/sellerContact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1234567890"
+                    android:textColor="#4F4F4F"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="15dp"
             android:id="@+id/btnBuy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button2"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/button1"
             android:text="Comprar"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="20sp" />
     </LinearLayout>
 </ScrollView>

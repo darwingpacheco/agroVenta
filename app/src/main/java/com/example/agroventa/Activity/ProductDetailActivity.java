@@ -70,7 +70,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         productImage.setAdapter(imagesAdapter);
         productTitle.setText(title);
         productDescription.setText(description);
-        productPrice.setText("Precio Unitario: " + price);
+        productPrice.setText("$" + price);
         sellerName.setText(nameSeller);
         sellerContact.setText(phoneContact);
         productLocation.setText(ubication);

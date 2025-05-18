@@ -1,6 +1,7 @@
 package com.example.agroventa.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -34,7 +35,7 @@ public class MakePurchase extends AppCompatActivity {
     private TextView countTotal;
     private TextView priceCalculate;
     private EditText edtCantdadToBuy, buyerName, shippingAddress, contactPhone;
-    private Button confirmPurchase, cancelPurchase;
+    private AppCompatButton confirmPurchase, cancelPurchase;
     private String countFinal, contactPhoneFinal, shippingAddressFinal, buyerNameFinal;
     private String idBuy;
     private int cantidadBuy, calculateCount;

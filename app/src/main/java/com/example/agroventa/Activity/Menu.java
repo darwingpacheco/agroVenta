@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -61,9 +62,11 @@ public class Menu extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         spinner = findViewById(R.id.spinnerOptions);
         searchView = findViewById(R.id.searchView);
-        btnBuy = findViewById(R.id.btnBuy);
-        btn_user = findViewById(R.id.btn_user);
+        //btnBuy = findViewById(R.id.btnBuy);
+        //btn_user = findViewById(R.id.btn_user);
         //btnUser2 = findViewById(R.id.btnUser2);
+
+        spinner.setAdapter(adapter(R.array.options, R.layout.spinner));
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -80,10 +83,10 @@ public class Menu extends AppCompatActivity {
         cargarProductosDesdeFirestore("General");
         startSessionCheck();
 
-        btnBuy.setOnClickListener(view -> {
-            Intent intent = new Intent(Menu.this, SellProducto.class);
-            startActivity(intent);
-        });
+ //       btnBuy.setOnClickListener(view -> {
+   //         Intent intent = new Intent(Menu.this, SellProducto.class);
+     //       startActivity(intent);
+       // });
 
 //        btnUser2.setOnClickListener(view -> {
 //            SessionManager.getInstance().setClickNoLogin(true);
@@ -99,16 +102,16 @@ public class Menu extends AppCompatActivity {
             //btnUser2.setVisibility(View.VISIBLE);
         }
 
-        btn_user.setOnClickListener(view -> {
-            if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isExpiredTime()) {
-                Intent intent = new Intent(Menu.this, DetailUser.class);
-                startActivity(intent);
-            } else {
-                SessionManager.getInstance().setClickNoLogin(true);
-                Intent intent = new Intent(Menu.this, MainActivity.class);
-                startActivity(intent);
-            }
-        });
+        //btn_user.setOnClickListener(view -> {
+          //  if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isExpiredTime()) {
+            //    Intent intent = new Intent(Menu.this, DetailUser.class);
+              //  startActivity(intent);
+            //} else {
+              //  SessionManager.getInstance().setClickNoLogin(true);
+                //Intent intent = new Intent(Menu.this, MainActivity.class);
+                //startActivity(intent);
+            //}
+       // });
 
         productAdapter.setOnClickListener((view, obj, position) -> {
             Intent intent = new Intent(Menu.this, ProductDetailActivity.class);
@@ -316,5 +319,15 @@ public class Menu extends AppCompatActivity {
             handler.removeCallbacks(sessionCheckRunnable);
         }
         searchView.clearFocus();
+    }
+
+    public ArrayAdapter adapter(int lista, int layoutId){
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,
+                lista,
+                layoutId
+        );
+        adapter.setDropDownViewResource(R.layout.textspinner);
+        return adapter;
     }
 }
