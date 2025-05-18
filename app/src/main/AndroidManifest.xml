@@ -16,10 +16,13 @@
         android:windowSoftInputMode="stateHidden|adjustPan"
         tools:targetApi="31">
         <activity
+            android:name=".Activity.RecuperarContraseña"
+            android:exported="false"
+            android:theme="@style/Theme.AgroVentaTres"/>
+        <activity
             android:name=".Activity.Home"
             android:exported="true"
             android:theme="@style/Theme.AgroVenta">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,7 +57,7 @@
         <activity
             android:name=".Activity.Menu"
             android:exported="false"
-            android:theme="@style/Theme.AgroVenta"/>
+            android:theme="@style/Theme.AgroVenta" />
     </application>
 
 </manifest>

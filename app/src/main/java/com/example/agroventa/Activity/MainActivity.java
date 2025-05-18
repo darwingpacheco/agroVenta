@@ -18,6 +18,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.w3c.dom.Text;
+
 public class MainActivity extends AppCompatActivity {
     private static final long SESSION_DURATION = 15 * 60 * 1000; // 5 minutos en milisegundos
     private long remainingTime = SESSION_DURATION; // Tiempo restante
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         userEditText = findViewById(R.id.userEditText);
         passwordEditText = findViewById(R.id.passwordEditText);
+        TextView txt_password = findViewById(R.id.txt_password);
 
         preferences = getSharedPreferences("SessionPrefs", MODE_PRIVATE);
         remainingTime = preferences.getLong("remainingTime", SESSION_DURATION);
@@ -63,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
             //Intent intent2 = new Intent(MainActivity.this, RegisterActivity.class);
             //startActivity(intent2);
         //});
+
+        txt_password.setOnClickListener(view -> {
+            Intent intentPass = new Intent(this, RecuperarContraseña.class);
+            startActivity(intentPass);
+            finish();
+        });
     }
 
     private void loginUser() {
