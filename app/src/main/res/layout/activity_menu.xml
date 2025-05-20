@@ -25,7 +25,16 @@
             android:gravity="center_vertical"
             android:paddingHorizontal="8dp">
 
-            <!-- Contenedor del buscador -->
+            <!-- Icono de usuario -->
+            <ImageView
+                android:id="@+id/imageViewUser"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:src="@drawable/user"
+                android:contentDescription="Usuario" />
+
+            <!-- Contenedor buscador -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="50dp"
@@ -37,10 +46,10 @@
                 android:padding="8dp">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="Buscar"
-                    android:src="@drawable/search" />
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/search"
+                    android:contentDescription="Buscar" />
 
                 <EditText
                     android:id="@+id/searchView"
@@ -52,21 +61,28 @@
                     android:hint="Buscar productos..."
                     android:inputType="text"
                     android:textColor="#000000"
-                    android:textColorHint="@color/gray_dark" />
+                    android:textColorHint="#828282" />
             </LinearLayout>
 
-            <!-- Spinner para filtros -->
-            <Spinner
-                android:id="@+id/spinnerOptions"
-                android:layout_width="100dp"
-                android:layout_height="50dp"
+            <!-- Icono de compras -->
+            <ImageView
+                android:id="@+id/imageViewBuy"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="8dp"
-                android:background="@drawable/spinner"
-                android:entries="@array/options"
-                android:spinnerMode="dropdown"
-                android:popupBackground="#f0f0f0" />
+                android:src="@drawable/car_sh"
+                android:contentDescription="Carrito" />
         </LinearLayout>
 
+
+        <Spinner
+            android:id="@+id/spinnerOptions"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/spinner"
+            android:entries="@array/options"
+            android:spinnerMode="dropdown"
+            android:popupBackground="#f0f0f0" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
@@ -75,4 +91,16 @@
             android:layout_marginTop="10dp"/>
 
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBarMenu"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

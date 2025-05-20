@@ -57,7 +57,7 @@
         <activity
             android:name=".Activity.Menu"
             android:exported="false"
-            android:theme="@style/Theme.AgroVenta" />
+            android:theme="@style/Theme.AgroVentaTres" />
     </application>
 
 </manifest>

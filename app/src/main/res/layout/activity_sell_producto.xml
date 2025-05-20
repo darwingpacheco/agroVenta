@@ -4,20 +4,20 @@
     xmlns:material="http://com.google.android.material"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:fillViewport="true"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:padding="12dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/fondo">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
+            android:background="@drawable/card_border"
             android:gravity="center"
             android:orientation="vertical"
             android:padding="20dp"
@@ -31,135 +31,107 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Vende tu producto"
-                android:textColor="@color/white"
-                android:textSize="30sp"
+                android:textColor="@color/gray_dark"
+                android:textSize="35sp"
                 android:textStyle="bold" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputProductTitle"
+            <EditText
+                android:id="@+id/edtTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_secund"
                 android:hint="Titulo"
-                android:textColorHint="@color/black">
+                android:inputType="text"
+                android:padding="12dp"
+                android:textColor="@color/gray_dark"
+                android:textColorHint="#4F4F4F"
+                android:textSize="16sp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/input"
-                    android:inputType="text"
-                    android:textColor="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputProductDescription"
+            <EditText
+                android:id="@+id/edtDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_secund"
                 android:hint="Descripción del Producto"
-                android:textColorHint="@color/black">
+                android:inputType="text"
+                android:padding="12dp"
+                android:textColor="@color/gray_dark"
+                android:textColorHint="#4F4F4F"
+                android:textSize="16sp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/input"
-                    android:inputType="text"
-                    android:textColor="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputProductPrice"
+            <EditText
+                android:id="@+id/edtPrice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_secund"
                 android:hint="Precio del Producto"
-                android:textColorHint="@color/black">
+                android:inputType="numberDecimal"
+                android:padding="12dp"
+                android:textColor="@color/gray_dark"
+                android:textColorHint="#4F4F4F"
+                android:textSize="16sp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtPrice"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/input"
-                    android:inputType="numberDecimal"
-                    android:textColor="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputSellerName"
+            <EditText
+                android:id="@+id/edtNameSeller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_secund"
                 android:hint="Nombre del Vendedor"
-                android:textColorHint="@color/black">
+                android:inputType="text"
+                android:padding="12dp"
+                android:textColor="@color/gray_dark"
+                android:textColorHint="#4F4F4F"
+                android:textSize="16sp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtNameSeller"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/input"
-                    android:inputType="text"
-                    android:textColor="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputSellerPhone"
+            <EditText
+                android:id="@+id/edtPhoneSeller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_secund"
                 android:hint="Telefono del Vendedor"
-                android:textColorHint="@color/black">
+                android:inputType="phone"
+                android:padding="12dp"
+                android:textColor="@color/gray_dark"
+                android:textColorHint="#4F4F4F"
+                android:textSize="16sp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtPhoneSeller"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/input"
-                    android:inputType="phone"
-                    android:textColor="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputSellerLocation"
+            <EditText
+                android:id="@+id/edtUbicationProduct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_secund"
                 android:hint="Ubicación del Vendedor"
-                android:textColorHint="@color/black">
+                android:inputType="text"
+                android:padding="12dp"
+                android:textColor="@color/gray_dark"
+                android:textColorHint="#4F4F4F"
+                android:textSize="16sp" />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtUbicationProduct"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/input"
-                    android:inputType="text"
-                    android:textColor="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/inputProductQuantity"
+            <EditText
+                android:id="@+id/edtQuantity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:background="@drawable/edittext_secund"
                 android:hint="Cantidad"
-                android:textColorHint="@color/black">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edtQuantity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/input"
-                    android:inputType="number"
-                    android:textColor="@color/black" />
-            </com.google.android.material.textfield.TextInputLayout>
+                android:inputType="number"
+                android:padding="12dp"
+                android:textColor="@color/gray_dark"
+                android:textColorHint="#4F4F4F"
+                android:textSize="16sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/input"
-                android:gravity="center_vertical"
+                android:gravity="start"
                 android:orientation="vertical">
 
                 <TextView
@@ -174,10 +146,9 @@
                     android:id="@+id/spinnerMeasureType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="#000000"
                     android:entries="@array/measureTypes"
-                    android:popupBackground="#e2f5ba"
-                    android:backgroundTint="#000000"/>
-
+                    android:popupBackground="#E0E0E0" />
             </LinearLayout>
 
             <LinearLayout
@@ -200,9 +171,9 @@
                     android:id="@+id/spinnerOptionsSeller"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="#000000"
                     android:entries="@array/optionsSell"
-                    android:popupBackground="#e2f5ba"
-                    android:backgroundTint="#000000"/>
+                    android:popupBackground="#E0E0E0" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -218,18 +189,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:layout_marginBottom="15dp"
                 android:background="@drawable/button1"
-                android:text="Agregar imagen"
-                android:textColor="@color/white" />
+                android:elevation="0dp"
+                android:foreground="@null"
+                android:stateListAnimator="@null"
+                android:text="Agregar Imagen"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnPublicar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/button2"
-                android:text="Publicar Producto"
-                android:textColor="@color/white" />
+                android:background="@drawable/button1"
+                android:elevation="0dp"
+                android:foreground="@null"
+                android:stateListAnimator="@null"
+                android:text="Publicar"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
+

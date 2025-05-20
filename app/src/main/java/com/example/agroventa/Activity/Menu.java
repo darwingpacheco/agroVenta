@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -45,13 +46,14 @@ public class Menu extends AppCompatActivity {
     private List<Product> productList;
     private List<Product> filteredProductList;
     private Spinner spinner;
-    private ImageView btnBuy, btn_user, btnUser2;
+    private ImageView imageViewBuy, imageViewUser, btnUser2;
     private FirebaseFirestore firestore;
     private CollectionReference productsRef;
     private String selectedItem;
     private Handler handler = new Handler();
     private Runnable sessionCheckRunnable;
     private boolean isSessionExpired = false;
+    private ProgressBar progressBarMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +64,10 @@ public class Menu extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         spinner = findViewById(R.id.spinnerOptions);
         searchView = findViewById(R.id.searchView);
-        //btnBuy = findViewById(R.id.btnBuy);
-        //btn_user = findViewById(R.id.btn_user);
+        progressBarMenu = findViewById(R.id.progressBarMenu);
+        progressBarMenu.setVisibility(View.VISIBLE);
+        imageViewBuy = findViewById(R.id.imageViewBuy);
+        imageViewUser = findViewById(R.id.imageViewUser);
         //btnUser2 = findViewById(R.id.btnUser2);
 
         spinner.setAdapter(adapter(R.array.options, R.layout.spinner));
@@ -83,10 +87,10 @@ public class Menu extends AppCompatActivity {
         cargarProductosDesdeFirestore("General");
         startSessionCheck();
 
- //       btnBuy.setOnClickListener(view -> {
-   //         Intent intent = new Intent(Menu.this, SellProducto.class);
-     //       startActivity(intent);
-       // });
+        imageViewBuy.setOnClickListener(view -> {
+            Intent intent = new Intent(Menu.this, SellProducto.class);
+            startActivity(intent);
+        });
 
 //        btnUser2.setOnClickListener(view -> {
 //            SessionManager.getInstance().setClickNoLogin(true);
@@ -102,16 +106,10 @@ public class Menu extends AppCompatActivity {
             //btnUser2.setVisibility(View.VISIBLE);
         }
 
-        //btn_user.setOnClickListener(view -> {
-          //  if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isExpiredTime()) {
-            //    Intent intent = new Intent(Menu.this, DetailUser.class);
-              //  startActivity(intent);
-            //} else {
-              //  SessionManager.getInstance().setClickNoLogin(true);
-                //Intent intent = new Intent(Menu.this, MainActivity.class);
-                //startActivity(intent);
-            //}
-       // });
+        imageViewUser.setOnClickListener(view -> {
+                Intent intent = new Intent(Menu.this, DetailUser.class);
+                startActivity(intent);
+        });
 
         productAdapter.setOnClickListener((view, obj, position) -> {
             Intent intent = new Intent(Menu.this, ProductDetailActivity.class);
@@ -138,6 +136,7 @@ public class Menu extends AppCompatActivity {
                 searchView.clearFocus();
 
                 if (selectedItem.equals("Tutoriales")) {
+                    progressBarMenu.setVisibility(View.VISIBLE);
 
                     new Handler().postDelayed(() -> {
                         recyclerView.setLayoutManager(new LinearLayoutManager(Menu.this));
@@ -150,6 +149,7 @@ public class Menu extends AppCompatActivity {
 
                         TutorialAdapter adapter = new TutorialAdapter(tutorialList, Menu.this);
                         recyclerView.setAdapter(adapter);
+                        progressBarMenu.setVisibility(View.GONE);
 
                     }, 1000);
                 } else {
@@ -224,6 +224,7 @@ public class Menu extends AppCompatActivity {
                         filteredProductList.addAll(productList);
                     }
                     productAdapter.updateData(filteredProductList);
+                    progressBarMenu.setVisibility(View.GONE);
                 } else {
                     Log.e("FirestoreError", "Error al cargar productos: " + task.getException().getMessage());
                     Toast.makeText(Menu.this, "Error al cargar productos: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();

@@ -13,7 +13,7 @@
         android:text="¡Gracias por tu compra!"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/black"
+        android:textColor="@color/gray_dark"
         android:gravity="center"/>
 
     <TextView

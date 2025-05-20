@@ -52,7 +52,7 @@ public class SellProducto extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         productsRef = db.collection("products");
-        storageRef = FirebaseStorage.getInstance().getReference().child("product_images");
+
 
         edtNameSeller = findViewById(R.id.edtNameSeller);
         edtTitle = findViewById(R.id.edtTitle);
@@ -71,8 +71,8 @@ public class SellProducto extends AppCompatActivity {
         imagesAdapter = new ImageProductsAdapter(getApplicationContext(), selectedImagesList);
         recyclerViewImages.setAdapter(imagesAdapter);
 
-        spinnerMeasureType.setAdapter(adapter(R.array.measureTypes, R.layout.spinner));
-        spinnerOptions.setAdapter(adapter(R.array.optionsSell, R.layout.spinner));
+        spinnerMeasureType.setAdapter(adapter(R.array.measureTypes, R.layout.spinner2));
+        spinnerOptions.setAdapter(adapter(R.array.optionsSell, R.layout.spinner2));
 
         spinnerOptions.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -113,13 +113,13 @@ public class SellProducto extends AppCompatActivity {
                     Uri imageUri = result.getData().getClipData().getItemAt(i).getUri();
                     selectedImagesList.add(imageUri);
                 }
+                recyclerViewImages.setVisibility(View.VISIBLE);
             } else if (result.getData().getData() != null) {
                 Uri imageUri = result.getData().getData();
                 selectedImagesList.add(imageUri);
             }
             imagesAdapter.notifyDataSetChanged();
         }
-        recyclerViewImages.setVisibility(View.VISIBLE);
     });
 
     private void uploadProduct() {
@@ -127,7 +127,7 @@ public class SellProducto extends AppCompatActivity {
             Toast.makeText(this, "Por favor seleccione al menos una imagen", Toast.LENGTH_SHORT).show();
             return;
         }
-
+        storageRef = FirebaseStorage.getInstance().getReference().child("product_images");
         List<String> imageUrls = new ArrayList<>();
         for (Uri imageUri : selectedImagesList) {
             String fileName = "image_" + System.currentTimeMillis();

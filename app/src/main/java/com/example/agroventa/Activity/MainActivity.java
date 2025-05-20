@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private int cantidadMove;
     private SharedPreferences preferences;
     AppCompatButton btnInit;
+    private ProgressBar progressBarinit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,20 +48,16 @@ public class MainActivity extends AppCompatActivity {
         passwordEditText = findViewById(R.id.passwordEditText);
         TextView txt_password = findViewById(R.id.txt_password);
         btnInit = findViewById(R.id.btnInit);
+        progressBarinit = findViewById(R.id.progressBarInit);
 
         preferences = getSharedPreferences("SessionPrefs", MODE_PRIVATE);
         remainingTime = preferences.getLong("remainingTime", SESSION_DURATION);
-        setSessionActive(preferences.getBoolean("isSessionActive", false));
 
         Intent intent = getIntent();
         productId = intent.getStringExtra("idProductDetail");
         titleMove = intent.getStringExtra("productTitle");
         priceMove = intent.getStringExtra("productPrice");
         cantidadMove = intent.getIntExtra("cantidadDetail", -1);
-
-
-        if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isClickNoLogin())
-            intentToDetail();
 
         btnInit.setOnClickListener(view -> loginUser());
 
@@ -80,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         btnInit.setEnabled(false);
+        progressBarinit.setVisibility(View.VISIBLE);
 
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
@@ -104,17 +103,12 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
-                        if (SessionManager.getInstance().isClickNoLogin()) {
-                            Toast.makeText(this, "Iniciaste sesión", Toast.LENGTH_SHORT).show();
-                            SessionManager.getInstance().setClickNoLogin(false);
-                            Intent intent1 = new Intent(MainActivity.this, Menu.class);
-                            startActivity(intent1);
-                            finish();
-                        } else {
-                            Toast.makeText(this, "Acceso correcto", Toast.LENGTH_SHORT).show();
-                            intentToDetail();
-                        }
-
+                        progressBarinit.setVisibility(View.GONE);
+                        Toast.makeText(this, "Iniciaste sesión", Toast.LENGTH_SHORT).show();
+                        SessionManager.getInstance().setClickNoLogin(false);
+                        Intent intent1 = new Intent(MainActivity.this, Menu.class);
+                        startActivity(intent1);
+                        finish();
                         SessionManager.getInstance().setUserSave(email);
 
                     } else {
@@ -126,72 +120,15 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void startSessionTimer() {
-        if (sessionTimer != null) {
-            sessionTimer.cancel();
-        }
-
-        sessionTimer = new CountDownTimer(remainingTime, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                remainingTime = millisUntilFinished;
-            }
-
-            @Override
-            public void onFinish() {
-                setSessionActive(false);
-                remainingTime = SESSION_DURATION;
-                saveSessionState();
-                Toast.makeText(MainActivity.this, "La sesión ha expirado. Por favor, vuelve a iniciar sesión.", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        };
-        sessionTimer.start();
-    }
-
-    private void saveSessionState() {
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putLong("remainingTime", remainingTime);
-        editor.putBoolean("isSessionActive", isSessionActive());
-        editor.apply();
-    }
 
     @Override
     protected void onPause() {
         super.onPause();
-        saveSessionState();
-        if (sessionTimer != null) {
-            sessionTimer.cancel();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (isSessionActive) {
-            startSessionTimer();
-        }
     }
 
-
-    public void intentToDetail() {
-        Intent intent = new Intent(MainActivity.this, MakePurchase.class);
-        intent.putExtra("titleMain", titleMove);
-        intent.putExtra("priceMain", priceMove);
-        intent.putExtra("cantidadMain", cantidadMove);
-        intent.putExtra("idMain", productId);
-        startActivity(intent);
-        finish();
-    }
-
-    public boolean isSessionActive() {
-        return isSessionActive;
-    }
-
-    public void setSessionActive(boolean sessionActive) {
-        isSessionActive = sessionActive;
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean("isSessionActive", sessionActive);
-        editor.apply();
-    }
 }
