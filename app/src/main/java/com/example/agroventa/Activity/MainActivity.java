@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
                         btnInit.setEnabled(true);
                         SessionManager.getInstance().setLogin(false);
                         Toast.makeText(this, "Revisa tus credenciales.", Toast.LENGTH_SHORT).show();
-
+                        progressBarinit.setVisibility(View.GONE);
                     }
                 });
     }
