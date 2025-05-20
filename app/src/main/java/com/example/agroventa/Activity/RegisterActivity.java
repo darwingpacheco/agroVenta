@@ -116,6 +116,9 @@ public class RegisterActivity extends AppCompatActivity {
                 .set(user)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(RegisterActivity.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);
                     finish(); // Finaliza la actividad
                 })
                 .addOnFailureListener(e -> {

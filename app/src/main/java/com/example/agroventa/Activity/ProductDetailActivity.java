@@ -78,21 +78,13 @@ public class ProductDetailActivity extends AppCompatActivity {
         medidaDetail.setText(cantidadReceived == 0 ? "" : medidaReceived);
 
         btnBuy.setOnClickListener(view -> {
-            if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isClickNoLogin()) {
-                Intent intent2 = new Intent(ProductDetailActivity.this, MakePurchase.class);
-                intent2.putExtra("titleMain", title);
-                intent2.putExtra("priceMain", price);
-                intent2.putExtra("cantidadMain", cantidadReceived);
-                intent2.putExtra("idMain", productId);
-                startActivity(intent2);
-            } else {
-                Intent intent1 = new Intent(this, MainActivity.class);
-                intent1.putExtra("productTitle", title);
-                intent1.putExtra("productPrice", price);
-                intent1.putExtra("cantidadDetail", cantidadReceived);
-                intent1.putExtra("idProductDetail", productId);
-                startActivity(intent1);
-            }
+            Intent intent2 = new Intent(ProductDetailActivity.this, MakePurchase.class);
+            intent2.putExtra("titleMain", title);
+            intent2.putExtra("priceMain", price);
+            intent2.putExtra("cantidadMain", cantidadReceived);
+            intent2.putExtra("idMain", productId);
+            startActivity(intent2);
+            finish();
         });
     }
 

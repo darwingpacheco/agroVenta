@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.example.agroventa.R;
 import com.example.agroventa.singleton.SessionManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -58,6 +60,9 @@ public class MakePurchase extends AppCompatActivity {
         shippingAddress = findViewById(R.id.shippingAddress);
         contactPhone = findViewById(R.id.contactPhone);
 
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        email = user.getEmail();
+
         Intent intent = getIntent();
         String titleBuy = intent.getStringExtra("titleMain");
         String priceBuy = intent.getStringExtra("priceMain");
@@ -70,8 +75,6 @@ public class MakePurchase extends AppCompatActivity {
         countTotal.setText(String.valueOf(cantidadBuy));
 
         cancelPurchase.setOnClickListener(view -> {
-            Intent intent1 = new Intent(MakePurchase.this, Menu.class);
-            startActivity(intent1);
             finish();
         });
 
@@ -93,14 +96,6 @@ public class MakePurchase extends AppCompatActivity {
             thankYouDialog.show();
 
             int newCount = cantidadBuy - calculateCount;
-            email = SessionManager.getInstance().getUserSave();
-
-            if (email.isEmpty() || email == null) {
-                Toast.makeText(this, "Tu sesión finalizo", Toast.LENGTH_SHORT).show();
-                Intent intentPublic = new Intent(MakePurchase.this, Menu.class);
-                startActivity(intentPublic);
-                finish();
-            }
 
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -135,10 +130,7 @@ public class MakePurchase extends AppCompatActivity {
                                                 .document(userId)
                                                 .update("purchasedProducts", FieldValue.arrayUnion(purchaseData))
                                                 .addOnSuccessListener(aVoid1 -> {
-                                                    // Éxito al agregar productos al array
                                                     thankYouDialog.dismiss();
-                                                    Intent intentPublic = new Intent(MakePurchase.this, Menu.class);
-                                                    startActivity(intentPublic);
                                                     finish();
                                                 })
                                                 .addOnFailureListener(e -> {

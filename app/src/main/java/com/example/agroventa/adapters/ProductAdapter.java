@@ -51,7 +51,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                     .load(product.getImageResourceId().get(0))
                     .into(holder.productImageView);
         } else {
-            holder.productImageView.setImageResource(R.drawable.cebolla);
+            holder.productImageView.setImageResource(R.drawable.user);
         }
 
         holder.itemView.setOnClickListener(v -> {

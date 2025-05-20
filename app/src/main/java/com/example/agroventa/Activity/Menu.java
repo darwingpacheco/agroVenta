@@ -85,26 +85,11 @@ public class Menu extends AppCompatActivity {
         productsRef = firestore.collection("products");
 
         cargarProductosDesdeFirestore("General");
-        startSessionCheck();
 
         imageViewBuy.setOnClickListener(view -> {
             Intent intent = new Intent(Menu.this, SellProducto.class);
             startActivity(intent);
         });
-
-//        btnUser2.setOnClickListener(view -> {
-//            SessionManager.getInstance().setClickNoLogin(true);
-//            Intent intent = new Intent(Menu.this, MainActivity.class);
-//            startActivity(intent);
-//        });
-
-        if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isExpiredTime()) {
-            //btnUser.setVisibility(View.VISIBLE);
-            //btnUser2.setVisibility(View.GONE);
-        } else {
-            //btnUser.setVisibility(View.GONE);
-            //btnUser2.setVisibility(View.VISIBLE);
-        }
 
         imageViewUser.setOnClickListener(view -> {
                 Intent intent = new Intent(Menu.this, DetailUser.class);
@@ -201,14 +186,15 @@ public class Menu extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         Product product = document.toObject(Product.class);
                         if (product != null) {
-                            productList.add(product.setProductId(document.getId()));
+                            if (product.getCantidad() >0 ){
+                                productList.add(product.setProductId(document.getId()));
 
-                            // Agregar al JSON
-                            if (!first) {
-                                jsonBuilder.append(",\n");
+                                if (!first) {
+                                    jsonBuilder.append(",\n");
+                                }
+                                jsonBuilder.append("    ").append(productToJson(product));
+                                first = false;
                             }
-                            jsonBuilder.append("    ").append(productToJson(product));
-                            first = false;
                         }
                     }
 
@@ -233,24 +219,10 @@ public class Menu extends AppCompatActivity {
         });
     }
 
-    private void startSessionCheck() {
-        sessionCheckRunnable = new Runnable() {
-            @Override
-            public void run() {
-
-                runOnUiThread(() -> updateIconsBasedOnSession());
-
-                handler.postDelayed(this, 1000);
-            }
-        };
-
-        handler.post(sessionCheckRunnable);
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        startSessionCheck();
         searchView.clearFocus();
 
         SessionManager.getInstance().startSession(new SessionListener() {

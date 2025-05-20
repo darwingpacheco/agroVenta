@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class SellProducto extends AppCompatActivity {
     private RecyclerView recyclerViewImages;
     private List<Uri> selectedImagesList = new ArrayList<>();
     private ImageProductsAdapter imagesAdapter;
+    private LinearLayout lyProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class SellProducto extends AppCompatActivity {
         btnAddImage = findViewById(R.id.btnAddImage);
         recyclerViewImages = findViewById(R.id.imageViewProduct);
         edtQuantity = findViewById(R.id.edtQuantity);
+        lyProgress = findViewById(R.id.lyProgress);
 
         recyclerViewImages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         imagesAdapter = new ImageProductsAdapter(getApplicationContext(), selectedImagesList);
@@ -123,10 +126,13 @@ public class SellProducto extends AppCompatActivity {
     });
 
     private void uploadProduct() {
+        btnPublicar.setEnabled(false);
         if (selectedImagesList.isEmpty()) {
             Toast.makeText(this, "Por favor seleccione al menos una imagen", Toast.LENGTH_SHORT).show();
+            btnPublicar.setEnabled(true);
             return;
         }
+        lyProgress.setVisibility(View.VISIBLE);
         storageRef = FirebaseStorage.getInstance().getReference().child("product_images");
         List<String> imageUrls = new ArrayList<>();
         for (Uri imageUri : selectedImagesList) {
@@ -141,6 +147,7 @@ public class SellProducto extends AppCompatActivity {
                 }
             })).addOnFailureListener(e -> {
                 Toast.makeText(this, "No se pudo cargar la imagen", Toast.LENGTH_SHORT).show();
+                btnPublicar.setEnabled(true);
             });
         }
     }
@@ -176,12 +183,16 @@ public class SellProducto extends AppCompatActivity {
         productsRef.add(product)
                 .addOnSuccessListener(documentReference -> {
                     showToast("Producto publicado exitosamente");
+                    btnPublicar.setEnabled(true);
                     finish();
                 })
                 .addOnFailureListener(e -> showToast("Error al publicar el producto"));
+        btnPublicar.setEnabled(true);
     }
 
     private boolean validateInputs(String title, String description, String ubication, String priceText, String phone, String name, String cantidad) {
+        lyProgress.setVisibility(View.GONE);
+        btnPublicar.setEnabled(true);
         if (title.isEmpty()) {
             showToast("Ingresa un título.");
             return false;
