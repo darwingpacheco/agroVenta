@@ -1,48 +1,32 @@
 package com.example.agroventa.Activity;
 
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.agroventa.R;
-import com.example.agroventa.data.UserData;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.agroventa.repository.BackendRepository;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText emailEditText, passwordEditText, confirmPasswordEditText, lastNameEditText, nameEditText, telefonoEditText;
     private Button registerButton;
     private ProgressBar progressBar;
-    private FirebaseAuth auth;
     private TextView txt_login;
-    private ScrollView scrollView;
-    private ConstraintLayout constraintId;
-    ViewGroup.MarginLayoutParams params;
+    private BackendRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.view_register);
 
-        auth = FirebaseAuth.getInstance();
+        repository = BackendRepository.getInstance(this);
 
         emailEditText = findViewById(R.id.edt_email);
         passwordEditText = findViewById(R.id.edt_password);
@@ -82,48 +66,29 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        if (password.length() < 6) {
+            Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         progressBar.setVisibility(View.VISIBLE);
 
-        auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, task -> {
-                    progressBar.setVisibility(View.GONE);
-                    if (task.isSuccessful()) {
-                        FirebaseUser user = auth.getCurrentUser();
-                        if (user != null) {
-                            saveUserToFirestore(user.getUid(), name, apellido, email, phone);
-                        }
-                    } else {
-                        try {
-                            throw task.getException();
-                        } catch (FirebaseAuthWeakPasswordException e) {
-                            passwordEditText.setError("Contraseña débil");
-                        } catch (FirebaseAuthInvalidCredentialsException e) {
-                            emailEditText.setError("Correo no válido");
-                        } catch (FirebaseAuthUserCollisionException e) {
-                            emailEditText.setError("El usuario ya está registrado");
-                        } catch (Exception e) {
-                            Toast.makeText(RegisterActivity.this, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
+        repository.register(name, apellido, phone, email, password, new BackendRepository.RepositoryCallback<Void>() {
+            @Override
+            public void onSuccess(Void value) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "Cuenta creada correctamente", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
 
-    private void saveUserToFirestore(String uid, String name, String apellido, String email, String phone) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        UserData user = new UserData(name, apellido, email, phone);
-
-        db.collection("users").document(uid)
-                .set(user)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(RegisterActivity.this, "Datos guardados correctamente", Toast.LENGTH_SHORT).show();
-                    FirebaseAuth.getInstance().signOut();
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
-                    finish(); // Finaliza la actividad
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(RegisterActivity.this, "Error al guardar datos: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+            @Override
+            public void onError(String message) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(RegisterActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

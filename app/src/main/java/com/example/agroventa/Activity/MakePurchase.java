@@ -6,29 +6,24 @@ import androidx.appcompat.widget.AppCompatButton;
 import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.Button;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.agroventa.data.DispatchPlan;
+import com.example.agroventa.data.PurchaseRequest;
 import com.example.agroventa.R;
+import com.example.agroventa.repository.BackendRepository;
 import com.example.agroventa.singleton.SessionManager;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class MakePurchase extends AppCompatActivity {
 
@@ -36,18 +31,22 @@ public class MakePurchase extends AppCompatActivity {
     private TextView priceCompra;
     private TextView countTotal;
     private TextView priceCalculate;
-    private EditText edtCantdadToBuy, buyerName, shippingAddress, contactPhone;
+    private EditText edtCantdadToBuy, buyerName, contactPhone;
+    private Spinner citySpinner, paymentSpinner;
     private AppCompatButton confirmPurchase, cancelPurchase;
-    private String countFinal, contactPhoneFinal, shippingAddressFinal, buyerNameFinal;
+    private String countFinal, contactPhoneFinal, buyerNameFinal;
     private String idBuy;
+    private String titleBuy;
+    private String priceBuy;
     private int cantidadBuy, calculateCount;
-    private String email;
     private String priceFinalParse;
+    private BackendRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_purchase);
+        repository = BackendRepository.getInstance(this);
 
         productName = findViewById(R.id.productName);
         priceCompra = findViewById(R.id.priceCompra);
@@ -57,15 +56,16 @@ public class MakePurchase extends AppCompatActivity {
         confirmPurchase = findViewById(R.id.confirmPurchase);
         cancelPurchase = findViewById(R.id.cancelPurchase);
         buyerName = findViewById(R.id.buyerName);
-        shippingAddress = findViewById(R.id.shippingAddress);
         contactPhone = findViewById(R.id.contactPhone);
+        citySpinner = findViewById(R.id.dispatchCitySpinner);
+        paymentSpinner = findViewById(R.id.paymentMethodSpinner);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        email = user.getEmail();
+        citySpinner.setAdapter(adapter(R.array.dispatchCities, R.layout.spinner2));
+        paymentSpinner.setAdapter(adapter(R.array.paymentMethods, R.layout.spinner2));
 
         Intent intent = getIntent();
-        String titleBuy = intent.getStringExtra("titleMain");
-        String priceBuy = intent.getStringExtra("priceMain");
+        titleBuy = intent.getStringExtra("titleMain");
+        priceBuy = intent.getStringExtra("priceMain");
         String priceBuyParse = String.valueOf(priceBuy);
         cantidadBuy = intent.getIntExtra("cantidadMain", -1);
         idBuy = intent.getStringExtra("idMain");
@@ -81,93 +81,40 @@ public class MakePurchase extends AppCompatActivity {
         confirmPurchase.setOnClickListener(view -> {
             countFinal = edtCantdadToBuy.getText().toString();
             contactPhoneFinal = contactPhone.getText().toString();
-            shippingAddressFinal = shippingAddress.getText().toString();
             buyerNameFinal = buyerName.getText().toString();
+            String dispatchCity = citySpinner.getSelectedItem().toString();
+            String paymentMethod = paymentSpinner.getSelectedItem().toString();
 
-            if (validations(countFinal, contactPhoneFinal, shippingAddressFinal, buyerNameFinal) != 0)
+            if (validations(countFinal, contactPhoneFinal, buyerNameFinal, dispatchCity, paymentMethod) != 0) {
                 return;
+            }
 
-            Dialog thankYouDialog = new Dialog(this);
-            thankYouDialog.setContentView(R.layout.thank_you_activity);
-            thankYouDialog.setCancelable(false);
+            if (!SessionManager.getInstance().isLogin()) {
+                Intent loginIntent = new Intent(MakePurchase.this, MainActivity.class);
+                loginIntent.putExtra("redirectTarget", "buy");
+                loginIntent.putExtra("titleMain", titleBuy);
+                loginIntent.putExtra("priceMain", priceBuy);
+                loginIntent.putExtra("cantidadMain", cantidadBuy);
+                loginIntent.putExtra("idMain", idBuy);
+                startActivity(loginIntent);
+                return;
+            }
 
-            thankYouDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            PurchaseRequest request = new PurchaseRequest(
+                    idBuy,
+                    titleBuy,
+                    calculateCount,
+                    priceBuy,
+                    priceFinalParse,
+                    buyerNameFinal,
+                    contactPhoneFinal,
+                    dispatchCity,
+                    paymentMethod
+            );
 
-            thankYouDialog.show();
-
-            int newCount = cantidadBuy - calculateCount;
-
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-
-            // Obtener la fecha actual como String con el formato deseado
-            String fechaFormatted = format.format(new Date());
-
-            db.collection("products")
-                    .document(idBuy)
-                    .update("cantidad", newCount)
-                    .addOnSuccessListener(aVoid -> {
-
-                        db.collection("users")
-                                .whereEqualTo("email", email)
-                                .get()
-                                .addOnSuccessListener(queryDocumentSnapshots -> {
-                                    if (!queryDocumentSnapshots.isEmpty()) {
-
-                                        String userId = queryDocumentSnapshots.getDocuments().get(0).getId();
-
-                                        // Crea un mapa con los datos del producto comprado
-                                        Map<String, Object> purchaseData = new HashMap<>();
-                                        purchaseData.put("id", idBuy);
-                                        purchaseData.put("cantidad", calculateCount);
-                                        purchaseData.put("productComprado", titleBuy);
-                                        purchaseData.put("fecha", fechaFormatted); // Agrega una fecha opcional
-                                        purchaseData.put("priceComprado", priceFinalParse);
-
-                                        // Agrega el arreglo de compras al documento del usuario
-                                        db.collection("users")
-                                                .document(userId)
-                                                .update("purchasedProducts", FieldValue.arrayUnion(purchaseData))
-                                                .addOnSuccessListener(aVoid1 -> {
-                                                    thankYouDialog.dismiss();
-                                                    finish();
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    showToast("Error al agregar producto");
-                                                });
-                                    } else
-                                        showToast("No se encontro el usuario");
-
-                                })
-                                .addOnFailureListener(e -> {
-                                    // Error al agregar productos al array
-                                    Dialog errorDialog = new Dialog(this);
-                                    errorDialog.setContentView(R.layout.thank_you_activity);
-                                    errorDialog.setCancelable(false);
-                                    errorDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-                                    errorDialog.show();
-
-                                    new Handler().postDelayed(() -> {
-                                        errorDialog.dismiss();
-                                    }, 2000);
-                                });
-                    })
-                    .addOnFailureListener(e -> {
-                        Dialog errorDialog = new Dialog(this);
-                        errorDialog.setContentView(R.layout.thank_you_activity);
-                        errorDialog.setCancelable(false);
-                        errorDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-
-                        errorDialog.show();
-
-                        new Handler().postDelayed(() -> {
-                            errorDialog.dismiss();
-                        }, 2000);
-                    });
+            DispatchPlan plan = repository.evaluateDispatch(dispatchCity, calculateCount);
+            processPaymentAndPurchase(request, plan);
         });
-
 
         edtCantdadToBuy.addTextChangedListener(new TextWatcher() {
             @Override
@@ -195,10 +142,69 @@ public class MakePurchase extends AppCompatActivity {
 
     }
 
-    private int validations(String countFinal, String contactPhoneFinal, String shippingAddressFinal, String buyerNameFinal) {
+    private void processPaymentAndPurchase(PurchaseRequest request, DispatchPlan plan) {
+        repository.createPaymentIntent(
+                SessionManager.getInstance().getAuthToken(),
+                request.getTotalPrice(),
+                request.getPaymentMethod(),
+                new BackendRepository.RepositoryCallback<String>() {
+                    @Override
+                    public void onSuccess(String paymentIntentId) {
+                        repository.createPurchase(
+                                SessionManager.getInstance().getAuthToken(),
+                                SessionManager.getInstance().getUserSave(),
+                                request,
+                                new BackendRepository.RepositoryCallback<Void>() {
+                                    @Override
+                                    public void onSuccess(Void value) {
+                                        showSuccessDialog(plan, paymentIntentId);
+                                    }
 
-        if (countFinal.isEmpty() || contactPhoneFinal.isEmpty() || shippingAddressFinal.isEmpty() || buyerNameFinal.isEmpty()) {
+                                    @Override
+                                    public void onError(String message) {
+                                        showToast("No se pudo completar la compra: " + message);
+                                    }
+                                }
+                        );
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        showToast("No se pudo iniciar el pago: " + message);
+                    }
+                }
+        );
+    }
+
+    private void showSuccessDialog(DispatchPlan plan, String paymentIntentId) {
+        Dialog thankYouDialog = new Dialog(this);
+        thankYouDialog.setContentView(R.layout.thank_you_activity);
+        thankYouDialog.setCancelable(true);
+        thankYouDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        thankYouDialog.show();
+
+        String message = "Pago confirmado: " + paymentIntentId + "\n" +
+                "Ciudad: " + plan.getCity() + "\n" +
+                "Modo despacho: " + plan.getDispatchMode() + "\n" +
+                plan.getStatusMessage();
+        showToast(message);
+        finish();
+    }
+    private int validations(String countFinal, String contactPhoneFinal, String buyerNameFinal,
+                            String dispatchCity, String paymentMethod) {
+
+        if (countFinal.isEmpty() || contactPhoneFinal.isEmpty() || buyerNameFinal.isEmpty()) {
             showToast("Revisa todos los campos");
+            return -1;
+        }
+
+        if ("Seleccione ciudad...".equals(dispatchCity)) {
+            showToast("Selecciona una ciudad de despacho");
+            return -1;
+        }
+
+        if ("Seleccione metodo...".equals(paymentMethod)) {
+            showToast("Selecciona un metodo de pago");
             return -1;
         }
 
@@ -250,5 +256,11 @@ public class MakePurchase extends AppCompatActivity {
 
     private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    public ArrayAdapter adapter(int lista, int layoutId) {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, lista, layoutId);
+        adapter.setDropDownViewResource(R.layout.textspinner);
+        return adapter;
     }
 }

@@ -57,13 +57,13 @@
 
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnLogin"
+                android:id="@+id/btnExplore"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@drawable/button2"
                 android:gravity="center"
-                android:text="Iniciar Sesión"
+                android:text="Ver productos"
                 android:textAllCaps="false"
                 android:textColor="@color/gray_dark"
                 android:textSize="20sp"
@@ -72,13 +72,13 @@
                 android:foreground="@null"/>
 
             <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnRegister"
+                android:id="@+id/btnAccount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@drawable/button1"
                 android:gravity="center"
-                android:text="Registrarse"
+                android:text="Ingresar / crear cuenta"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="20sp"

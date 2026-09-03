@@ -27,14 +27,8 @@ import com.example.agroventa.adapters.TutorialAdapter;
 import com.example.agroventa.data.Product;
 import com.example.agroventa.data.Tutorial;
 import com.example.agroventa.interfaces.SessionListener;
+import com.example.agroventa.repository.BackendRepository;
 import com.example.agroventa.singleton.SessionManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,19 +41,17 @@ public class Menu extends AppCompatActivity {
     private List<Product> filteredProductList;
     private Spinner spinner;
     private ImageView imageViewBuy, imageViewUser, btnUser2;
-    private FirebaseFirestore firestore;
-    private CollectionReference productsRef;
     private String selectedItem;
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
     private Runnable sessionCheckRunnable;
-    private boolean isSessionExpired = false;
     private ProgressBar progressBarMenu;
+    private BackendRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        FirebaseApp.initializeApp(this);
+        repository = BackendRepository.getInstance(this);
 
         recyclerView = findViewById(R.id.recyclerView);
         spinner = findViewById(R.id.spinnerOptions);
@@ -81,17 +73,22 @@ public class Menu extends AppCompatActivity {
         productAdapter = new ProductAdapter(Menu.this, filteredProductList);
         recyclerView.setAdapter(productAdapter);
 
-        firestore = FirebaseFirestore.getInstance();
-        productsRef = firestore.collection("products");
-
         cargarProductosDesdeFirestore("General");
 
         imageViewBuy.setOnClickListener(view -> {
+            if (!SessionManager.getInstance().isLogin()) {
+                navigateToLogin("sell");
+                return;
+            }
             Intent intent = new Intent(Menu.this, SellProducto.class);
             startActivity(intent);
         });
 
         imageViewUser.setOnClickListener(view -> {
+                if (!SessionManager.getInstance().isLogin()) {
+                    navigateToLogin("profile");
+                    return;
+                }
                 Intent intent = new Intent(Menu.this, DetailUser.class);
                 startActivity(intent);
         });
@@ -174,47 +171,27 @@ public class Menu extends AppCompatActivity {
     }
 
     private void cargarProductosDesdeFirestore(String tipoFiltro) {
-        productsRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        progressBarMenu.setVisibility(View.VISIBLE);
+        repository.getProducts(tipoFiltro, new BackendRepository.RepositoryCallback<List<Product>>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    productList.clear();
-                    StringBuilder jsonBuilder = new StringBuilder();
-                    jsonBuilder.append("{\n  \"products\": [\n");
-
-                    boolean first = true;
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        Product product = document.toObject(Product.class);
-                        if (product != null) {
-                            if (product.getCantidad() >0 ){
-                                productList.add(product.setProductId(document.getId()));
-
-                                if (!first) {
-                                    jsonBuilder.append(",\n");
-                                }
-                                jsonBuilder.append("    ").append(productToJson(product));
-                                first = false;
-                            }
-                        }
+            public void onSuccess(List<Product> value) {
+                productList.clear();
+                for (Product product : value) {
+                    if (product.getCantidad() > 0) {
+                        productList.add(product);
                     }
-
-                    jsonBuilder.append("\n  ]\n}");
-                    Log.d("FirestoreData", jsonBuilder.toString());
-
-                    // Filtrar la lista según el tipo seleccionado
-                    if (!tipoFiltro.equals("General")) {
-                        filteredProductList.clear();
-                        filteredProductList.addAll(filtrarPorTipo(tipoFiltro));
-                    } else {
-                        filteredProductList.clear();
-                        filteredProductList.addAll(productList);
-                    }
-                    productAdapter.updateData(filteredProductList);
-                    progressBarMenu.setVisibility(View.GONE);
-                } else {
-                    Log.e("FirestoreError", "Error al cargar productos: " + task.getException().getMessage());
-                    Toast.makeText(Menu.this, "Error al cargar productos: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
+                filteredProductList.clear();
+                filteredProductList.addAll(productList);
+                productAdapter.updateData(filteredProductList);
+                progressBarMenu.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(String message) {
+                Log.e("Backend", "Error al cargar productos: " + message);
+                Toast.makeText(Menu.this, "Error al cargar productos", Toast.LENGTH_SHORT).show();
+                progressBarMenu.setVisibility(View.GONE);
             }
         });
     }
@@ -241,26 +218,6 @@ public class Menu extends AppCompatActivity {
             cargarProductosDesdeFirestore(selectedItem);
     }
 
-    private void updateIconsBasedOnSession() {
-        if (SessionManager.getInstance().isLogin() && !SessionManager.getInstance().isExpiredTime()) {
-            //btnUser.setVisibility(View.VISIBLE);
-            //btnUser2.setVisibility(View.GONE);
-        } else {
-            //btnUser.setVisibility(View.GONE);
-            //btnUser2.setVisibility(View.VISIBLE);
-        }
-    }
-
-    private List<Product> filtrarPorTipo(String tipo) {
-        List<Product> productosFiltrados = new ArrayList<>();
-        for (Product producto : productList) {
-            if (producto.getTipo().equals(tipo)) {
-                productosFiltrados.add(producto);
-            }
-        }
-        return productosFiltrados;
-    }
-
     private void filtrarProductosPorNombre(String query) {
         if (productList == null || productList.isEmpty())
             return;
@@ -277,11 +234,6 @@ public class Menu extends AppCompatActivity {
         filteredProductList.clear();
         filteredProductList.addAll(productosFiltrados);
         productAdapter.updateData(productosFiltrados);
-    }
-
-    private String productToJson(Product product) {
-        return String.format("{\"title\": \"%s\", \"description\": \"%s\", \"price\": \"%s\", \"tipo\": \"%s\", \"ubication\": \"%s\", \"nameSeller\": \"%s\", \"phoneContact\": \"%s\"}",
-                product.getTitle(), product.getDescription(), product.getPrice(), product.getTipo(), product.getUbication(), product.getNameSeller(), product.getPhoneContact());
     }
 
     @Override
@@ -302,5 +254,11 @@ public class Menu extends AppCompatActivity {
         );
         adapter.setDropDownViewResource(R.layout.textspinner);
         return adapter;
+    }
+
+    private void navigateToLogin(String target) {
+        Intent intent = new Intent(Menu.this, MainActivity.class);
+        intent.putExtra("redirectTarget", target);
+        startActivity(intent);
     }
 }

@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.agroventa.R;
-import com.example.agroventa.singleton.SessionManager;
 import com.example.agroventa.adapters.ImageProductsAdapter;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +82,6 @@ public class ProductDetailActivity extends AppCompatActivity {
             intent2.putExtra("cantidadMain", cantidadReceived);
             intent2.putExtra("idMain", productId);
             startActivity(intent2);
-            finish();
         });
     }
 

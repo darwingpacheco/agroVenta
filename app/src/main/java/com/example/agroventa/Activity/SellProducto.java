@@ -21,11 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.agroventa.data.Product;
 import com.example.agroventa.R;
 import com.example.agroventa.adapters.ImageProductsAdapter;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
+import com.example.agroventa.repository.BackendRepository;
+import com.example.agroventa.singleton.SessionManager;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -34,9 +31,6 @@ import java.util.List;
 import android.widget.ArrayAdapter;
 
 public class SellProducto extends AppCompatActivity {
-    private FirebaseFirestore db;
-    private CollectionReference productsRef;
-    private StorageReference storageRef;
     private EditText edtNameSeller, edtTitle, edtDescription, edtPrice, edtPhoneSeller, edtUbicationProduct, edtQuantity;
     private Button btnPublicar, btnAddImage;
     private Spinner spinnerOptions, spinnerMeasureType;
@@ -46,14 +40,21 @@ public class SellProducto extends AppCompatActivity {
     private List<Uri> selectedImagesList = new ArrayList<>();
     private ImageProductsAdapter imagesAdapter;
     private LinearLayout lyProgress;
+    private BackendRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sell_producto);
+        repository = BackendRepository.getInstance(this);
 
-        db = FirebaseFirestore.getInstance();
-        productsRef = db.collection("products");
+        if (!SessionManager.getInstance().isLogin()) {
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("redirectTarget", "sell");
+            startActivity(intent);
+            finish();
+            return;
+        }
 
 
         edtNameSeller = findViewById(R.id.edtNameSeller);
@@ -132,28 +133,6 @@ public class SellProducto extends AppCompatActivity {
             btnPublicar.setEnabled(true);
             return;
         }
-        lyProgress.setVisibility(View.VISIBLE);
-        storageRef = FirebaseStorage.getInstance().getReference().child("product_images");
-        List<String> imageUrls = new ArrayList<>();
-        for (Uri imageUri : selectedImagesList) {
-            String fileName = "image_" + System.currentTimeMillis();
-            StorageReference imageRef = storageRef.child(fileName);
-
-            UploadTask uploadTask = imageRef.putFile(imageUri);
-            uploadTask.addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                imageUrls.add(String.valueOf(Uri.parse(uri.toString())));
-                if (imageUrls.size() == selectedImagesList.size()) {
-                    saveProductToFirestore(imageUrls);
-                }
-            })).addOnFailureListener(e -> {
-                Toast.makeText(this, "No se pudo cargar la imagen", Toast.LENGTH_SHORT).show();
-                btnPublicar.setEnabled(true);
-            });
-        }
-    }
-
-    private void saveProductToFirestore(List<String> imageUrls) {
-        List<String> imageUrlStrings = new ArrayList<>(imageUrls);
 
         String title = edtTitle.getText().toString().trim();
         String description = edtDescription.getText().toString().trim();
@@ -163,9 +142,14 @@ public class SellProducto extends AppCompatActivity {
         String name = edtNameSeller.getText().toString().trim();
         String cantidad = edtQuantity.getText().toString().trim();
 
-        if (!validateInputs(title, description, ubication, priceText, phone, name, cantidad)) return;
+        if (!validateInputs(title, description, ubication, priceText, phone, name, cantidad)) {
+            return;
+        }
 
-        int cantidadInt = Integer.parseInt(cantidad);
+        List<String> imageUrlStrings = new ArrayList<>();
+        for (Uri image : selectedImagesList) {
+            imageUrlStrings.add(image.toString());
+        }
 
         Product product = new Product(
                 title,
@@ -177,17 +161,26 @@ public class SellProducto extends AppCompatActivity {
                 name,
                 selectedItem,
                 selectedMedida,
-                cantidadInt
+                Integer.parseInt(cantidad)
         );
 
-        productsRef.add(product)
-                .addOnSuccessListener(documentReference -> {
-                    showToast("Producto publicado exitosamente");
-                    btnPublicar.setEnabled(true);
-                    finish();
-                })
-                .addOnFailureListener(e -> showToast("Error al publicar el producto"));
-        btnPublicar.setEnabled(true);
+        lyProgress.setVisibility(View.VISIBLE);
+        repository.publishProduct(SessionManager.getInstance().getAuthToken(), product, new BackendRepository.RepositoryCallback<Void>() {
+            @Override
+            public void onSuccess(Void value) {
+                lyProgress.setVisibility(View.GONE);
+                showToast("Producto publicado exitosamente");
+                btnPublicar.setEnabled(true);
+                finish();
+            }
+
+            @Override
+            public void onError(String message) {
+                lyProgress.setVisibility(View.GONE);
+                showToast("Error al publicar: " + message);
+                btnPublicar.setEnabled(true);
+            }
+        });
     }
 
     private boolean validateInputs(String title, String description, String ubication, String priceText, String phone, String name, String cantidad) {
@@ -223,12 +216,12 @@ public class SellProducto extends AppCompatActivity {
             return false;
         }
 
-        if (selectedMedida.isEmpty()) {
+        if (selectedMedida == null || selectedMedida.isEmpty() || "Seleccione...".equals(selectedMedida)) {
             showToast("Seleccione el tipo de medida.");
             return false;
         }
 
-        if (selectedItem.isEmpty()) {
+        if (selectedItem == null || selectedItem.isEmpty() || "Seleccione...".equals(selectedItem)) {
             showToast("Seleccione el tipo de producto.");
             return false;
         }

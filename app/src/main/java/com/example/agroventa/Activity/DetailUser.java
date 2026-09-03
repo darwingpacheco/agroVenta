@@ -1,7 +1,6 @@
 package com.example.agroventa.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,19 +15,13 @@ import android.widget.Toast;
 import com.example.agroventa.R;
 import com.example.agroventa.adapters.PurchaseAdapter;
 import com.example.agroventa.data.Purchase;
-import com.example.agroventa.data.UserData;
+import com.example.agroventa.data.SaleRecord;
+import com.example.agroventa.data.UserProfile;
+import com.example.agroventa.repository.BackendRepository;
 import com.example.agroventa.singleton.SessionManager;
-import com.google.firebase.Timestamp;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 public class DetailUser extends AppCompatActivity {
 
@@ -38,10 +31,11 @@ public class DetailUser extends AppCompatActivity {
     private TextView userEmail;
     private TextView userPhone;
     private TextView purchasesTitle;
-    private FirebaseFirestore db;
+    private TextView salesSummary;
     private RecyclerView recycler;
     List<Purchase> purchaseList = new ArrayList<>();
     PurchaseAdapter adapter = new PurchaseAdapter(purchaseList);
+    private BackendRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,27 +47,28 @@ public class DetailUser extends AppCompatActivity {
         userEmail = findViewById(R.id.userEmail);
         userPhone = findViewById(R.id.userPhone);
         purchasesTitle = findViewById(R.id.purchasesTitle);
+        salesSummary = findViewById(R.id.salesSummary);
         recycler = findViewById(R.id.recyclerViewPurchases);
         logoutButton = findViewById(R.id.logoutButton);
 
         recycler.setLayoutManager(new LinearLayoutManager(this));
         recycler.setAdapter(adapter);
 
-        db = FirebaseFirestore.getInstance();
+        repository = BackendRepository.getInstance(this);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            String email = user.getEmail();
+        String email = SessionManager.getInstance().getUserSave();
+        if (SessionManager.getInstance().isLogin() && email != null) {
             fetchUserData(email);
         } else {
-            Toast.makeText(this, "Correo no proporcionado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Inicia sesion para ver tu perfil", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(DetailUser.this, MainActivity.class).putExtra("redirectTarget", "profile"));
             finish();
         }
 
         logoutButton.setOnClickListener(view -> {
             SessionManager.getInstance().setLogin(false);
             SessionManager.getInstance().setExpiredTime(true);
-            FirebaseAuth.getInstance().signOut();
+            SessionManager.getInstance().clearAuth();
             Intent intent = new Intent(DetailUser.this, Home.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
@@ -84,38 +79,53 @@ public class DetailUser extends AppCompatActivity {
     }
 
     private void fetchUserData(String email) {
-        db.collection("users")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null && !task.getResult().isEmpty()) {
-                        DocumentSnapshot document = task.getResult().getDocuments().get(0);
+        repository.getProfile(
+                SessionManager.getInstance().getAuthToken(),
+                email,
+                new BackendRepository.RepositoryCallback<UserProfile>() {
+                    @Override
+                    public void onSuccess(UserProfile profile) {
+                        userName.setText(profile.getName());
+                        userEmail.setText(profile.getEmail());
+                        userPhone.setText(profile.getPhone());
 
-                        userName.setText(document.getString("name"));
-                        userEmail.setText(document.getString("email"));
-                        userPhone.setText(document.getString("phone"));
-
-                        List<Map<String, Object>> purchases = (List<Map<String, Object>>) document.get("purchasedProducts");
-                        if (purchases != null) {
-                            for (Map<String, Object> purchaseData : purchases) {
-                                Purchase purchase = new Purchase(
-                                        (String) purchaseData.get("productComprado"),
-                                        (String) purchaseData.get("priceComprado"),
-                                        String.valueOf(purchaseData.get("cantidad")),
-                                        (String) purchaseData.get("fecha")
-                                );
-                                purchaseList.add(purchase);
-                            }
-                            adapter.notifyDataSetChanged();
+                        purchaseList.clear();
+                        if (profile.getPurchases() != null) {
+                            purchaseList.addAll(profile.getPurchases());
                         }
+                        adapter.notifyDataSetChanged();
 
-                    } else {
-                        Toast.makeText(this, "Usuario no encontrado", Toast.LENGTH_SHORT).show();
+                        salesSummary.setText(buildSalesSummary(profile.getSales()));
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error al realizar la consulta", e);
-                    Toast.makeText(this, "Error al obtener datos", Toast.LENGTH_SHORT).show();
-                });
+
+                    @Override
+                    public void onError(String message) {
+                        Log.e("Backend", "Error al cargar perfil", new RuntimeException(message));
+                        Toast.makeText(DetailUser.this, "Error al obtener datos", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+    }
+
+    private String buildSalesSummary(List<SaleRecord> sales) {
+        if (sales == null || sales.isEmpty()) {
+            return "No tienes ventas registradas todavia.";
+        }
+
+        StringBuilder builder = new StringBuilder();
+        for (SaleRecord sale : sales) {
+            builder.append("- ")
+                    .append(sale.getProductName())
+                    .append(" | ")
+                    .append(sale.getQuantity())
+                    .append(" kg | ")
+                    .append(sale.getCity())
+                    .append(" | ")
+                    .append(sale.getStatus())
+                    .append(" | ")
+                    .append(sale.getDate())
+                    .append("\n");
+        }
+        return builder.toString().trim();
     }
 }

@@ -11,17 +11,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.agroventa.R;
-import com.google.firebase.auth.FirebaseAuth;
+import com.example.agroventa.repository.BackendRepository;
 
 public class RecuperarContraseña extends AppCompatActivity {
 
-    private String email;
+    private BackendRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.view_recuperar_password);
+        repository = BackendRepository.getInstance(this);
 
         EditText emailEditText = findViewById(R.id.emailEditText);
         TextView txt_init = findViewById(R.id.txt_init);
@@ -30,15 +31,18 @@ public class RecuperarContraseña extends AppCompatActivity {
         btnReset.setOnClickListener(v -> {
             String email = emailEditText.getText().toString().trim();
             if (!email.isEmpty()) {
-                FirebaseAuth.getInstance().sendPasswordResetEmail(email)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(this, "Correo enviado", Toast.LENGTH_SHORT).show();
-                                finish();
-                            } else {
-                                Toast.makeText(this, "Error al enviar correo" , Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                repository.requestPasswordReset(email, new BackendRepository.RepositoryCallback<Void>() {
+                    @Override
+                    public void onSuccess(Void value) {
+                        Toast.makeText(RecuperarContraseña.this, "Solicitud enviada", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(RecuperarContraseña.this, "Error al enviar solicitud", Toast.LENGTH_SHORT).show();
+                    }
+                });
             } else {
                 Toast.makeText(this, "Por favor ingresa un correo", Toast.LENGTH_SHORT).show();
             }

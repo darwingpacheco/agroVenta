@@ -23,4 +23,20 @@
         <item>@string/Canastillas</item>
     </string-array>
 
+    <string-array name="dispatchCities">
+        <item>Seleccione ciudad...</item>
+        <item>Bogota</item>
+        <item>Medellin</item>
+        <item>Cali</item>
+        <item>Bucaramanga</item>
+        <item>Barranquilla</item>
+    </string-array>
+
+    <string-array name="paymentMethods">
+        <item>Seleccione metodo...</item>
+        <item>PSE</item>
+        <item>Tarjeta credito/debito</item>
+        <item>Transferencia</item>
+    </string-array>
+
 </resources>

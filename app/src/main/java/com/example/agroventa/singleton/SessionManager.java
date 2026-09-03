@@ -15,6 +15,7 @@ public class SessionManager {
     private boolean clickNoLogin;
     private SessionListener listener;
     private String userSave;
+    private String authToken;
 
     private SessionManager() {
         isSessionActive = false;
@@ -123,6 +124,22 @@ public class SessionManager {
 
     public void setUserSave(String userSave) {
         this.userSave = userSave;
+    }
+
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    public void clearAuth() {
+        authToken = null;
+        userSave = null;
+        isLogin = false;
+        expiredTime = false;
+        stopSession();
     }
 }
 
