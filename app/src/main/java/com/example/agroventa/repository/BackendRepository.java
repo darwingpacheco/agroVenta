@@ -2,7 +2,7 @@ package com.example.agroventa.repository;
 
 import android.content.Context;
 
-import com.example.agroventa.BuildConfig;
+import com.example.agroventa.config.RuntimeConfig;
 import com.example.agroventa.data.DispatchPlan;
 import com.example.agroventa.data.Product;
 import com.example.agroventa.data.Purchase;
@@ -43,7 +43,7 @@ public class BackendRepository {
 
     private BackendRepository(Context context) {
         this.api = ApiClient.getRetrofit().create(AgroVentaApi.class);
-        this.useMock = BuildConfig.USE_MOCK_BACKEND;
+        this.useMock = RuntimeConfig.useMockBackend();
         seedMockData();
     }
 

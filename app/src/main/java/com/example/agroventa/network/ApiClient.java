@@ -1,6 +1,6 @@
 package com.example.agroventa.network;
 
-import com.example.agroventa.BuildConfig;
+import com.example.agroventa.config.RuntimeConfig;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -24,7 +24,7 @@ public final class ApiClient {
                     .build();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BuildConfig.BACKEND_BASE_URL)
+                    .baseUrl(RuntimeConfig.getBackendBaseUrl())
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
